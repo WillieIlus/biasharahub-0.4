@@ -1,0 +1,22 @@
+<!-- category widget -->
+<div class="widget atbd_widget widget-card">
+  <div class="atbd_widget_title">
+    <h4><span class="la la-bookmark"></span> Categories</h4>
+  </div><!-- ends: /.atbd_widget_title -->
+  <div class="widget-body atbdp-widget-categories">
+    <ul class="atbdp_parent_category">
+      {% for category in categories %}
+      <li>
+        <a href="{{ category.get_absolute_url }}"><span class="{{ category.icon }}"></span>{{ category.name }}</a>
+        <span class="cat-trigger"></span>
+        <ul class="atbdp_child_category">
+          <li><a href="">Event</a></li>
+          <li><a href="">Meeting</a></li>
+          <li><a href="">Sports</a></li>
+          <li><a href="">Business</a></li>
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </div><!-- ends: .atbdp -->
+</div><!-- ends: .widget -->

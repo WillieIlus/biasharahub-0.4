@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+{% block title %} formset | {{ block.super }} {% endblock %}
+{% block lead %}
+formset
+{% endblock %}
+
+{% block jumbotron %}
+<a class="btn btn-common">
+  form
+</a>
+{% endblock  %}
+
+{% block content %}
+<section id="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-10 col-md-offset-1">
+        <div class="page-ads box">
+          <form enctype="multipart/form-data" class="form-ad" action="." method="POST">
+            <div class="form-group is-empty">
+              {% csrf_token %}
+              {% crispy formset helper %}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
