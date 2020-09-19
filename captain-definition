@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "dockerfileLines": [
     "FROM library/python:3.6.3-alpine",
-    "RUN apk update && apk upgrade && apk add jpeg-dev zlib-dev libjpeg && apk add --no-cache py3-numpy make g++ bash git openssh postgresql-dev curl",
+    "RUN apk update && apk upgrade && apk add jpeg-dev zlib-dev libjpeg && apk add --no-cache py-numpy make g++ bash git openssh postgresql-dev curl",
     "RUN mkdir -p /usr/src/app",
     "WORKDIR /usr/src/app",
     "COPY ./biasharahub/ /usr/src/app",
