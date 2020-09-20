@@ -11,7 +11,7 @@ SECRET_KEY = '4-#uonxctis^jk88-&&%s4gci7=0xvp66y4^4nmrtmsp6=i_=%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', 'biasharahub.com']
+ALLOWED_HOSTS = ['*', '0.0.0.0', '127.0.0.1', 'biasharahub.com']
 
 
 DATABASES = {
@@ -22,10 +22,10 @@ DATABASES = {
 }
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
