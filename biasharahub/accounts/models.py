@@ -1,4 +1,4 @@
-import np
+from statistics import mean
 
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
@@ -82,8 +82,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         return 'email'
 
     def average_rating(self):
-        all_ratings = list(map(lambda x: x.rating, self.review_set.all()))
-        return np.mean(all_ratings)
+        all_ratings = list(map(lambda x: x.rating, self.reviews.all()))
+
+        if not all_ratings:
+            return float('nan');
+        else:
+            return mean(all_ratings)
 
 
 class Network(models.Model):
