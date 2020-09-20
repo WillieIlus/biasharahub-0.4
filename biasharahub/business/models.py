@@ -1,8 +1,10 @@
 from __future__ import unicode_literals
 import datetime
+from statistics import mean
+
 import pytz
-import np
-import numpy as np
+# import np
+# import numpy as np
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
@@ -59,7 +61,11 @@ class Business(Common, UrlMixin, MetaTagsMixin):
 
     def average_rating(self):
         all_ratings = list(map(lambda x: x.rating, self.reviews.all()))
-        return np.mean(all_ratings)
+
+        if not all_ratings:
+            return float('nan');
+        else:
+            return mean(all_ratings)
 
     def get_absolute_url(self):
         return reverse('business:detail', kwargs={'slug': self.slug})
@@ -83,7 +89,6 @@ class Business(Common, UrlMixin, MetaTagsMixin):
         markdown_text = markdown(description)
         return mark_safe(markdown_text)
 
-
     @cached_property
     def image_count(self):
         return self.photos.count()
@@ -97,19 +102,18 @@ class Business(Common, UrlMixin, MetaTagsMixin):
         now = timezone.now()
         closed_hours = self.opening_hours.all().filter(start__gte=now, end__lte=now, weekday=now.isoweekday)
         return closed_hours
-    
+
     @cached_property
     def closed_days(self):
         now = timezone.now()
         closed = self.opening_hours.all().filter(closed=True, weekday=now.isoweekday)
         return closed
-    
+
     @cached_property
     def is_closed_for_now(self):
         cfn = self.closed_days or self.closed_hours
         return cfn.count()
-    
-    
+
     def is_open(self):
         now = datetime.datetime.now()
         # for open in self.opening_hours.all().filter(start__lte=now, end__gte=now, weekday=now.isoweekday):
