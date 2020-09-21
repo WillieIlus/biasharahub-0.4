@@ -31,23 +31,24 @@ sitemaps = {
 
 }
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', Home.as_view(), name='home'),
-    path('newsletter', NewsletterView.as_view(), name='newsletter'),
-    path('accounts/', include('allauth.urls',)),
-    path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('categories/', include('categories.urls', namespace='categories')),
-    path('business/', include('business.urls', namespace='business')),
-    path('reviews/', include('reviews.urls', namespace='reviews')),
-    path('comments/', include('comments.urls', namespace='comments')),
-    path('invitations/', include('invitations.urls', namespace='invitations')),
-    path('locations/', include('locations.urls', namespace='locations')),
-    path('opening-hours/', include('openinghours.urls', namespace='openinghours')),
-    path('about-us/', flatpage, {'url': '/about-us/'}, name='about'),
-    path('contact-us/', flatpage, {'url': '/contact-us/'}, name='contact'),
-    path('policy/', flatpage, {'url': '/policy/'}, name='policy'),
+                  path('admin/', admin.site.urls),
+                  path('', Home.as_view(), name='home'),
+                  path('newsletter', NewsletterView.as_view(), name='newsletter'),
+                  path('accounts/', include('allauth.urls', )),
+                  path('accounts/', include('accounts.urls', namespace='accounts')),
+                  path('categories/', include('categories.urls', namespace='categories')),
+                  path('business/', include('business.urls', namespace='business')),
+                  path('reviews/', include('reviews.urls', namespace='reviews')),
+                  path('comments/', include('comments.urls', namespace='comments')),
+                  path('invitations/', include('invitations.urls', namespace='invitations')),
+                  path('locations/', include('locations.urls', namespace='locations')),
+                  path('opening-hours/', include('openinghours.urls', namespace='openinghours')),
+                  path('about-us/', flatpage, {'url': '/about-us/'}, name='about'),
+                  path('contact-us/', flatpage, {'url': '/contact-us/'}, name='contact'),
+                  path('policy/', flatpage, {'url': '/policy/'}, name='policy'),
 
-    path('sitemap.xml', index, {'sitemaps': sitemaps}),
-    path('sitemap-<section>.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('sitemap.xml', index, {'sitemaps': sitemaps}),
+                  path('sitemap-<section>.xml', sitemap, {'sitemaps': sitemaps},
+                       name='django.contrib.sitemaps.views.sitemap'),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
+              + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
