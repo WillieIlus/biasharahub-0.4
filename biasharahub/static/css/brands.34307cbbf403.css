@@ -6,11 +6,8 @@
   font-family: 'Font Awesome 5 Brands';
   font-style: normal;
   font-weight: normal;
-  
-  
-}
+  src: url("../fonts/fa-brands-400.ec0716ae8aa1.eot");
+  src: url("../fonts/fa-brands-400.ec0716ae8aa1.eot?#iefix") format("embedded-opentype"), url("../fonts/fa-brands-400.659c4d58b002.woff2") format("woff2"), url("../fonts/fa-brands-400.8b7a9afd7b95.woff") format("woff"), url("../fonts/fa-brands-400.b69de69a4ff8.ttf") format("truetype"), url("../fonts/fa-brands-400.42f9fd6acee8.svg#fontawesome") format("svg"); }
 
 .fab {
   font-family: 'Font Awesome 5 Brands'; }
-
-

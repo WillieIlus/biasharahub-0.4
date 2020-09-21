@@ -19,14 +19,14 @@ AUTH_USER_MODEL = 'accounts.User'
 
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
+    'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.flatpages',
-    'whitenoise.runserver_nostatic',
-    'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites',
 
@@ -140,6 +140,7 @@ ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -147,7 +148,6 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
 
@@ -230,15 +230,15 @@ DEFAULT_FROM_EMAIL = 'webmaster@example.com'
 LOGOUT_REDIRECT_URL = 'account_login'
 LOGIN_REDIRECT_URL = 'accounts:dashboard'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static/', 'C:/Users/postgres/Desktop/biashara/biasharahub/static/', ),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static/'),
+# )
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, "templates"),)
 
 # WhiteNoise Configuration
 # http://whitenoise.evans.io/en/stable/#quickstart-for-django-apps
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 if os.environ.get("CAPROVER") is None:
     from .settings_dev import *
