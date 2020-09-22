@@ -7,7 +7,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.http import request
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.utils.encoding import uri_to_iri
 from django.views.generic import CreateView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin, DetailView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
@@ -68,6 +69,9 @@ class BusinessCreate(LoginRequiredMixin, CreateView):
         recipients = form.instance.email
         send_mail(subject, message, sender, [recipients])
         return super().form_valid(form)
+
+
+
 
 
 @login_required
@@ -147,6 +151,10 @@ class BusinessDetail(SingleObjectMixin, HitCountMixin, ListView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Business.objects.all())
         return super().get(request, *args, **kwargs)
+
+    def get_object(self, **kwargs):
+        slug = self.kwargs.get('slug')
+        return get_object_or_404(Business, slug=uri_to_iri(slug))
 
     def get_queryset(self):
         return self.object.reviews.all()
