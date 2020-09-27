@@ -43,13 +43,13 @@
     </div>
   </div><!-- ends: .directory_search_area -->
 </section><!-- ends: .intro-wrapper -->
+{% if review in review %}
 <section class="blog-area blog-grid section-padding-strict section-bg">
   <div class="container">
-
     <div class="atbd_author_listings_area m-bottom-30">
       <h1> Top Reviews</h1>
       <div class="atbd_author_filter_area">
-        <!--            add something here-->
+        <!-- add something here-->
       </div>
     </div><!-- ends: .atbd_author_listings_area -->
 
@@ -77,7 +77,8 @@
     </div>
   </div>
 </section>
-
+{% endif %}
+{% if category in category %}
 <section class="categories-cards section-padding-two">
   <div class="container">
     <div class="row">
@@ -115,6 +116,8 @@
     </div>
   </div>
 </section><!-- ends: .categories-cards -->
+{% endif %}
+{% if business in business %}
 <section class="listing-cards section-bg section-padding">
   <div class="container">
     <div class="row">
@@ -161,11 +164,13 @@
                     <div class="atbd_listing_meta">
                       <span class="atbd_meta atbd_listing_rating">{{ business.average_rating | floatformat }}
                         <i class="la la-star"></i></span>
+                      {% comment %}
                       {% if business.is_open == True %}
                       <span class="atbd_meta atbd_badge_open">Open Now</span>
                       {% else %}
                       <span class="atbd_meta atbd_badge_closed">Closed</span>
                       {% endif %}
+                      {% endcomment %}
                     </div><!-- End atbd listing meta -->
                     <div class="atbd_listing_data_list">
                       <ul>
@@ -222,6 +227,8 @@
     </div>
   </div>
 </section><!-- ends: .listing-cards -->
+{% endif %}
+{% comment %}
 <section class="subscribe-wrapper">
   <div class="container">
     <div class="row">
@@ -239,6 +246,6 @@
     </div>
   </div>
 </section><!-- ends: .subscribe-wrapper -->
-
+{% endcomment %}
 
 {% endblock %}

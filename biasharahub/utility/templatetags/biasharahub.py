@@ -50,12 +50,12 @@ def get_recent_comments(number=5):
 
 @register.inclusion_tag('tags/business_popular.html')
 def get_popular_business(number=5):
-    return {'popular_business': Business.objects.order_by('-hit_count_generic__hits', '-reviews')[:number]}
+    return {'popular_business': Business.objects.order_by('-hit_count', '-reviews')[:number]}
 
 
 @register.inclusion_tag('tags/reviews_popular.html')
 def get_popular_reviews(number=5):
-    return {'popular_reviews': Review.objects.order_by('-hit_count_generic__hits')[:number]}
+    return {'popular_reviews': Review.objects.order_by('-hit_count')[:number]}
 
 
 @register.inclusion_tag('tags/related_business.html')
