@@ -33,7 +33,7 @@
               <div class="logo-wrapper order-lg-0 order-sm-1">
                 <div class="logo logo-top">
                   <img alt="logo image" class="img-fluid"
-                       src=' {% if business.logo %} {{ business.logo.url }} {% else %} {% static "img/logo-white.png" %} {% endif %}'
+                       src=' {% if business.logo %} {{ business.logo.url }}{% endif %}'
                        width="100px">
                 </div>
               </div><!-- ends: .logo-wrapper -->
@@ -218,7 +218,7 @@
             {% else %}
             <p>{{ business.name }} has decided to put an air of heightened hysteria around them</p>
             {% endif %}
-            {% if request.user == business.owner or business.user %}
+            {% if request.user == business.user %}
             <hr/>
             <a href="{% url 'business:edit' business.slug %}" class="btn btn-gradient btn-gradient-two">
               Update Business
