@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
-{% load hitcount_tags %}
 {% load biasharahub %}
 {% block head %}{{ business.get_meta_tags }}{% endblock %}
 <title>{% block title %} {{ business.name }} | {{ block.super }} {% endblock %}</title>
-
 {% block headcrumb-wrapper %}
 {% endblock %}
 
@@ -32,9 +30,11 @@
 
               <div class="logo-wrapper order-lg-0 order-sm-1">
                 <div class="logo logo-top">
+                  {% if business.logo %}
                   <img alt="logo image" class="img-fluid"
-                       src=' {% if business.logo %} {{ business.logo.url }}{% endif %}'
+                       src='{{ business.logo.url }}'
                        width="100px">
+                  {% endif %}
                 </div>
               </div><!-- ends: .logo-wrapper -->
             </li>
@@ -257,7 +257,7 @@
               Gallery
             </a>
             {% endif %}
-            {% if request.user == business.user or business.owner %}
+            {% if request.user == business.user %}
             <a href="{% url 'business:photos' business.slug %}" class="btn btn-gradient btn-gradient-one">
               Update Photos
             </a>&nbsp;
@@ -326,8 +326,10 @@
             <div class="atbd_area_title">
               <h4><span class="la la-star-o"></span>{{ business.reviews.count }}
                 Review{{ business.reviews.count|pluralize }}</h4>
+                      {% if not request.user == business.user %}
               <label class="btn btn-secondary btn-icon-left btn-sm not_empty" for="review_content"><span
                   class="la la-star-o"></span> Add a review</label>
+              {% endif %}
             </div>
           </div>
           <div class="atbdb_content_module_contents">
@@ -478,7 +480,7 @@
             {% include 'includes/pagination.html' %}
           </div>
         </div><!-- ends: .atbd_content_module -->
-        {% if request.user == business.owner %}
+        {% if request.user == business.user %}
         <div class="col-lg-8 mt-5 mt-lg-0">
           <div class="widget atbd_widget widget-card">
             <div class="atbd_widget_title">
@@ -487,8 +489,6 @@
             </div>
           </div>
         </div>
-        {% elif request.user == business.user %}
-        <p>Not allowed </p>
         {% else %}
         <div class="atbd_content_module atbd_review_form">
           <div class="atbd_content_module__tittle_area">
@@ -519,18 +519,18 @@
       <div class="col-lg-4 mt-5 mt-lg-0">
         <div class="widget atbd_widget widget-card">
           <div class="atbd_widget_title">
-            <h4><span class="la la-user"></span>Owner</h4>
+            <h4><span class="la la-user"></span>Added by</h4>
           </div><!-- ends: .atbd_widget_title -->
           <div class="widget-body atbd_author_info_widget">
             <div class="atbd_avatar_wrapper">
               <div class="atbd_review_avatar">
-                <img alt="Avatar Image" src='{% if business.owner.photo %}
-                          {{ owner.photo.url }} {% else %} {% static "img/avatar-60x60.jpg" %} {% endif %}'>
+                <img alt="Avatar Image" src='{% if business.user.photo %}
+                          {{ user.photo.url }} {% else %} {% static "img/avatar-60x60.jpg" %} {% endif %}'>
               </div>
               <div class="atbd_name_time">
-                <h4>{% if not business.owner.get_full_name %}
-                  {{ business.owner.username }} {% else %}
-                  {{ business.owner.get_full_name }} {% endif %} </h4>
+                <h4>{% if not business.user.get_full_name %}
+                  {{ business.user.username }} {% else %}
+                  {{ business.user.get_full_name }} {% endif %} </h4>
                 <span class="review_time">Posted {{ business.publish.date|timesince }} ago</span>
               </div>
             </div><!-- ends: .atbd_avatar_wrapper -->
@@ -593,11 +593,13 @@
         <div class="widget atbd_widget widget-card">
           <div class="atbd_widget_title">
             <h4><span class="la la-clock-o"></span> Business Hours</h4>
+            {% comment %}
             {% if business.is_open == True %}
             <span class="badge badge-success">Open Now</span>
             {% else %}
             <span class="badge badge-warning">Closed</span>
             {% endif %}
+            {% endcomment %}
 
           </div><!-- ends: .atbd_widget_title -->
           <div class="directory_open_hours">
@@ -620,7 +622,7 @@
             <p> Opening hours not added yet</p>
             {% endif %}
             <hr/>
-            {% if request.user == business.user or business.owner %}
+            {% if request.user == business.user %}
 
             <a href="{% url 'openinghours:edit_open_hours' business.slug %}" class="btn btn-gradient btn-gradient-one">
               Edit Business Hours
@@ -646,7 +648,7 @@
         </div><!-- ends: .widget -->
         <div class="widget atbd_widget widget-card">
           <div class="atbd_widget_title">
-            <h4><span class="la la-envelope"></span></h4>Inbox Owner
+            <h4><span class="la la-envelope"></span></h4>Inbox User
           </div><!-- ends: .atbd_widget_title -->
           <div class="atbdp-widget-listing-contact">
             <form class="form-vertical" id="atbdp-contact-form" role="form">
@@ -663,7 +665,7 @@
                                           required=""
                                           rows="3"></textarea>
               </div>
-              <button class="btn btn-outline-secondary btn-block" type="submit">Message Owner</button>
+              <button class="btn btn-outline-secondary btn-block" type="submit">Message User</button>
             </form>
           </div><!-- ends: .atbdp-widget-listing-contact -->
         </div><!-- ends: .widget -->

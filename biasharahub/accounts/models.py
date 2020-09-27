@@ -82,7 +82,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return 'email'
 
     def average_rating(self):
-        all_ratings = list(map(lambda x: x.rating, self.reviews.all()))
+        all_ratings = list(map(lambda x: x.rating, self.review_set.all()))
 
         if not all_ratings:
             return float('nan');

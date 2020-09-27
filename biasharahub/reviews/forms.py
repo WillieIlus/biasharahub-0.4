@@ -12,7 +12,7 @@ from .models import Review, ReviewImage
 class ReviewForm(ModelForm):
     class Meta:
         model = Review
-        fields = ['title', 'rating', 'content']
+        fields = ['rating', 'content']
         widgets = {
             'rating': RadioSelect(),
             'content': Textarea(attrs={'cols': 40, 'rows': 5}),
@@ -31,7 +31,6 @@ class ReviewForm(ModelForm):
                     css_class='atbd_rating_stars',
                 ),
             ),
-            'title',
             Row(
                 Column('content', css_class='mt-10 form-group col-md-12 mb-0'),
                 css_class='form-row', css_id='review_content'

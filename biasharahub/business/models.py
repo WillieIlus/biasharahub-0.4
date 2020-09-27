@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 import datetime
 from statistics import mean
 
-# import np
-# import numpy as np
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
@@ -17,7 +15,7 @@ from taggit.models import TaggedItemBase
 from accounts.models import User
 from categories.models import Category
 from favourites.models import Bookmark
-from hitcount.models import HitCount
+from hitcount.models import Hit
 from locations.models import Location
 from reviews.models import Review
 from utility.models import Common, UrlMixin, MetaTagsMixin
@@ -50,7 +48,7 @@ class Business(Common, UrlMixin, MetaTagsMixin):
 
     reviews = GenericRelation(Review)
     bookmark = GenericRelation(Bookmark)
-    hit_count = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
+    hit_count = GenericRelation(Hit)
 
     class Meta:
         verbose_name = "biashara"

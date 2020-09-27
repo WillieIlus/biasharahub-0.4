@@ -43,7 +43,7 @@
     </div>
   </div><!-- ends: .directory_search_area -->
 </section><!-- ends: .intro-wrapper -->
-{% if review in review %}
+{% if review %}
 <section class="blog-area blog-grid section-padding-strict section-bg">
   <div class="container">
     <div class="atbd_author_listings_area m-bottom-30">
@@ -58,10 +58,12 @@
       <div class="col-lg-4 col-md-6">
         <div class="grid-single">
           <div class="card post--card shadow-sm">
+            {% if review.featured_image %}
             <figure>
-              <a href="{{ review.get_absolute_url }}"><img alt="" src='{% if review.featured_image %}
-                {{ review.featured_image }} {% else %} {% static "img/c4.jpg" %}{% endif %}'></a>
+              <a href="{{ review.get_absolute_url }}"><img alt="" src='
+                {{ review.featured_image }}'></a>
             </figure>
+            {% endif %}
             <div class="card-body">
               <h6><a href="{{ review.get_absolute_url }}">{{ review.title }}</a></h6>
               <ul class="post-meta d-flex list-unstyled">
@@ -78,7 +80,7 @@
   </div>
 </section>
 {% endif %}
-{% if category in category %}
+{% if category %}
 <section class="categories-cards section-padding-two">
   <div class="container">
     <div class="row">
@@ -117,7 +119,7 @@
   </div>
 </section><!-- ends: .categories-cards -->
 {% endif %}
-{% if business in business %}
+{% if business %}
 <section class="listing-cards section-bg section-padding">
   <div class="container">
     <div class="row">
@@ -136,7 +138,7 @@
                 <figure class="atbd_listing_thumbnail_area">
                   <div class="atbd_listing_image">
                     <a href="{{ business.get_absolute_url }}"><img alt="" src='{% if business.featured_image %}
-                {{ business.featured_image }} {% else %} {% static "img/c5.jpg" %}{% endif %}'></a>
+                {{ business.featured_image }}{% endif %}'></a>
                   </div><!-- ends: .atbd_listing_image -->
                   <div class="atbd_author atbd_author--thumb">
                     <a href="{{ business.get_absolute_url }}">
@@ -172,6 +174,7 @@
                       {% endif %}
                       {% endcomment %}
                     </div><!-- End atbd listing meta -->
+                    <div><p>{{ business.description|truncatewords:"25" }}</p></div>
                     <div class="atbd_listing_data_list">
                       <ul>
                         <li>
@@ -204,9 +207,7 @@
                       {% endif %}
                     </div>
                     <ul class="atbd_content_right">
-                      {% comment %}
-                      <li class="atbd_count"><span class="la la-eye"></span>900+</li>
-                      {% endcomment %}
+                      <li class="atbd_count"><span class="la la-eye"></span>10+</li>
                       <li class="atbd_save">
                         <span class="la la-heart-o"></span>
                       </li>

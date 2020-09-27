@@ -1,5 +1,3 @@
-import warnings
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,9 +14,6 @@ from haystack.query import SearchQuerySet
 
 from business.models import Business, BusinessImage
 from comments.forms import CommentForm
-from hitcount.models import HitCount
-from hitcount.utils import RemovedInHitCount13Warning
-from hitcount.views import HitCountMixin
 from reviews.forms import ReviewForm
 from .forms import BusinessForm, BusinessPhotoFormSet, BusinessPhotoFormSetHelper, BusinessSearchForm
 
@@ -78,12 +73,6 @@ def add_photos(request, slug):
     form = BusinessPhotoFormSet(request.POST or None, request.FILES or None, instance=company)
     helper = BusinessPhotoFormSetHelper()
 
-    # if not company.owner:
-    #     if company.user != request.user or request.user.is_superuser:
-    #         raise PermissionDenied
-    # elif company.owner != request.user or request.user.is_superuser:
-    #     raise PermissionDenied
-
     if form.is_valid():
         company = form.cleaned_data['company']
         img = form.cleaned_data['img']
@@ -108,19 +97,8 @@ class BusinessEdit(LoginRequiredMixin, UpdateView):
     form_class = BusinessForm
     template_name = 'business/form.html'
 
-    # def dispatch(self, request, *args, **kwargs):
-    #     obj = super().get_object()
-    #     if obj.owner is None:
-    #         if obj.user != self.request.user or self.request.user.is_superuser:
-    #             raise PermissionDenied
-    #     elif obj.owner != self.request.user or self.request.user.is_superuser:
-    #         raise PermissionDenied
-    #     else:
-    #         return obj
-    #     return super().dispatch(request, *args, **kwargs)
 
-
-class BusinessDetail(SingleObjectMixin, HitCountMixin, ListView):
+class BusinessDetail(SingleObjectMixin, ListView):
     model = Business
     template_name = 'business/detail.html'
     context_object_name = 'business'
@@ -145,32 +123,7 @@ class BusinessDetail(SingleObjectMixin, HitCountMixin, ListView):
         context['comment_form'] = CommentForm()
         # context['related_business'] = self.object.services.similar_objects()[:4]
 
-        if self.object:
-            hit_count = HitCount.objects.get_for_object(self.object)
-            hits = hit_count.hits
-            context['hitcount'] = {'pk': hit_count.pk}
-
-            if self.count_hit:
-                hit_count_response = self.hit_count(self.request, hit_count)
-                if hit_count_response.hit_counted:
-                    hits = hits + 1
-                context['hitcount']['hit_counted'] = hit_count_response.hit_counted
-                context['hitcount']['hit_message'] = hit_count_response.hit_message
-
-            context['hitcount']['total_hits'] = hits
-
         return context
-
-    def _update_hit_count(request, hitcount):
-        """
-        Deprecated in 1.2. Use hitcount.views.Hit CountMixin.hit_count() instead.
-        """
-        warnings.warn(
-            "hitcount.views._update_hit_count is deprecated. "
-            "Use hitcount.views.HitCountMixin.hit_count() instead.",
-            RemovedInHitCount13Warning
-        )
-        return HitCountMixin.hit_count(request, hitcount)
 
 
 class PhotoGallery(DetailView):

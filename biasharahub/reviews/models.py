@@ -8,7 +8,7 @@ from django.utils.text import slugify
 from accounts.models import User
 from comments.models import Comment
 from favourites.models import Vote
-from hitcount.models import HitCount
+from hitcount.models import Hit
 from utility.models import UrlMixin
 
 RATING_CHOICES = (
@@ -30,11 +30,9 @@ class Review(UrlMixin, models.Model):
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=600)
     slug = models.SlugField(max_length=200, blank=True, null=True)
     rating = models.IntegerField(choices=RATING_CHOICES, default=1)
-    hit_count_generic = GenericRelation(HitCount, )
-
+    hit_count = GenericRelation(Hit)
     comments = GenericRelation(Comment)
     votes = GenericRelation(Vote, related_query_name='review')
 
@@ -44,7 +42,7 @@ class Review(UrlMixin, models.Model):
         ordering = ['-publish']
 
     def save(self, *args, **kwargs):
-        slug = slugify("%s at  %s" % (self.title, self.content_object))
+        slug = slugify("%s at  %s" % (self.user, self.content_object))
         self.slug = slug
         super().save(*args, **kwargs)
 

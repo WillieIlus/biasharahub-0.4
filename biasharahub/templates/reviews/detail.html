@@ -3,19 +3,19 @@
 {% load crispy_forms_tags %}
 {% load biasharahub %}
 
-{% block title %}  {{ review.title }} | {{ block.super }} {% endblock %}
+{% block title %}  {{ review.user }} | {{ block.super }} {% endblock %}
 
 {% block bg-image-holder %}
 <div class="bg_image_holder"><img alt="" src='{% static "img/breadcrumb1.jpg" %}'></div>
 {% endblock %}
 
 {% block page-title %}
-<h1 class="page-title">{{ review.title }} </h1>
+<h1 class="page-title">{{ review.user }} </h1>
 {% endblock %}
 
 {% block breadcrumb_item %}
 <li class="breadcrumb-item"><a href='{% url "reviews:list" %}'><i class="fa fa-list"></i>List</a></li>
-<li aria-current="page" class="breadcrumb-item active">{{ review.title }}</li>
+<li aria-current="page" class="breadcrumb-item active">{{ review.user }}</li>
 <li class="breadcrumb-item"><a href='{% url "reviews:edit" review.slug %}'><i class="fa fa-plus"></i>Edit</a></li>
 {% endblock %}
 
@@ -33,7 +33,7 @@
           </div>
           <div class="post-content">
             <div class="post-header">
-              <h3>{{ review.title }}</h3>
+              <h3>{{ review.user }}</h3>
               <ul class="list-unstyled">
                 <li>{{ review.publish|date }}</li>
                 <li>By <a href="{{ review.user.get_absolute_url }}">{{ review.user }}</a></li>

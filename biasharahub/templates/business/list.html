@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
-{% load hitcount_tags %}
 
 {% block title %}  Biashara List  | {{ block.super }} {% endblock %}
 
@@ -43,12 +42,11 @@
               <div class="col-lg-12">
                 <div class="atbd_single_listing atbd_listing_list">
                   <article class="atbd_single_listing_wrapper">
+                    {% if business.featured_image %}
                     <figure class="atbd_listing_thumbnail_area">
                       <div class="atbd_listing_image">
                         <a href="{{ business.get_absolute_url }}">
-                          <img alt="listing image" src='{% if business.featured_image %}
-                          {{ business.featured_image }}
-                          {% else %} {% static "img/p1.jpg" %} {% endif %}'>
+                          <img alt="listing image" src='{{ business.featured_image }}'>
                         </a>
                       </div><!-- ends: .atbd_listing_image -->
                       <div class="atbd_thumbnail_overlay_content">
@@ -62,6 +60,7 @@
                         </ul><!-- ends .atbd_upper_badge -->
                       </div><!-- ends: .atbd_thumbnail_overlay_content -->
                     </figure><!-- ends: .atbd_listing_thumbnail_area -->
+                    {% endif %}
                     <div class="atbd_listing_info">
                       <div class="atbd_content_upper">
                         <h4 class="atbd_listing_title">
@@ -83,6 +82,14 @@
                           {% endif %}
                           {% endcomment %}
                         </div><!-- End atbd listing meta -->
+                        <div><p>{{ business.description|truncatewords:"25" }}</p></div>
+                        <div class="pull-right">
+                          <a href="{{ business.get_absolute_url }}"
+                             class="btn btn-gradient btn-gradient-one btn-block btn-icon icon-right m-top-40">
+                            More
+                            <span class="la la-long-arrow-right"></span>
+                          </a>
+                        </div>
                         <div class="atbd_listing_data_list">
                           <ul>
                             {% if business.address %}
@@ -116,19 +123,20 @@
                         </div>
                         <ul class="atbd_content_right">
                           <li class="atbd_count"><span class="la la-eye"></span>
-                            {% get_hit_count for business %}+
+                            10+
                           </li>
                           <li class="atbd_save">
                             <span href="{% url 'business:bookmark' slug=business.slug %}" class="la la-heart-o"></span>
                           </li>
                           <li>
+                            {% if business.logo %}
                             <div class="atbd_author atbd_author--thumb">
                               <a href="{{ business.get_absolute_url }}">
-                                <img alt="Logo" src='{% if business.logo %}
-                          {{ business.logo.url }} {% else %} {% static "img/author-thumb2.jpg" %} {% endif %}'>
+                                <img alt="Logo" src=' {{ business.logo.url }}  '>
                                 <span class="custom-tooltip">{{ business.name }}</span>
                               </a>
                             </div>
+                            {% endif %}
                           </li>
                         </ul>
                       </div><!-- end .atbd_listing_bottom_content -->

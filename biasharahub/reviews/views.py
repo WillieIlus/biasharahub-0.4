@@ -1,5 +1,3 @@
-import warnings
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,12 +5,10 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
-from hitcount.models import HitCount
-from hitcount.utils import RemovedInHitCount13Warning
-from hitcount.views import HitCountMixin
 
 from business.models import Business
 from comments.forms import CommentForm
+from hitcount.views import HitCountMixin
 from reviews.forms import ReviewForm, ReviewPhotoFormSetHelper, ReviewPhotoFormSet
 from .models import Review
 
@@ -65,7 +61,7 @@ class ReviewList(ListView):
     paginate_by = 10
 
 
-class ReviewDetail(SingleObjectMixin, HitCountMixin, ListView):
+class ReviewDetail(SingleObjectMixin, ListView, HitCountMixin):
     model = Review
     paginate_by = 10
     context_object_name = 'review'
@@ -79,10 +75,9 @@ class ReviewDetail(SingleObjectMixin, HitCountMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
-        # context.update({'popular_reviews': Review.objects.order_by('-hit_count_generic__hits')[:3], })
 
         if self.object:
-            hit_count = HitCount.objects.get_for_object(self.object)
+            hit_count = Review.objects.get_for_object(self.object)
             hits = hit_count.hits
             context['hitcount'] = {'pk': hit_count.pk}
 
@@ -96,17 +91,6 @@ class ReviewDetail(SingleObjectMixin, HitCountMixin, ListView):
             context['hitcount']['total_hits'] = hits
 
         return context
-
-    def _update_hit_count(request, hitcount):
-        """
-        Deprecated in 1.2. Use hitcount.views.Hit CountMixin.hit_count() instead.
-        """
-        warnings.warn(
-            "hitcount.views._update_hit_count is deprecated. "
-            "Use hitcount.views.HitCountMixin.hit_count() instead.",
-            RemovedInHitCount13Warning
-        )
-        return HitCountMixin.hit_count(request, hitcount)
 
     def get_queryset(self):
         return self.object.comments.all()

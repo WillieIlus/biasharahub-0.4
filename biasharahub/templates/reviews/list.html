@@ -36,7 +36,7 @@
                 </figcaption>
               </figure>
               <div class="card-body">
-                <h3><a href="{{ review.get_absolute_url }}">{{ review.title }}</a></h3>
+                <h3><a href="{{ review.get_absolute_url }}">{{ review.user }}</a></h3>
                 <ul class="post-meta list-unstyled">
                   <li>{{ review.publish|date }} ( {{ review.publish|timesince }} ago )</li>
                   <li>by <a href="{{ review.user.get_absolute_url }}">{{ review.user }}</a></li>
