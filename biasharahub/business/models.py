@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
+
 import datetime
 from statistics import mean
 
-import pytz
 # import np
 # import numpy as np
 from django.contrib.contenttypes.fields import GenericRelation
@@ -10,15 +10,14 @@ from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
-from hitcount.models import HitCount
+from markdown_deux import markdown
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItemBase
-
-from markdown_deux import markdown
 
 from accounts.models import User
 from categories.models import Category
 from favourites.models import Bookmark
+from hitcount.models import HitCount
 from locations.models import Location
 from reviews.models import Review
 from utility.models import Common, UrlMixin, MetaTagsMixin
@@ -30,7 +29,6 @@ class SameServices(TaggedItemBase):
 
 class Business(Common, UrlMixin, MetaTagsMixin):
     user = models.ForeignKey(User, related_name='added_by', on_delete=models.PROTECT)
-    owner = models.ForeignKey(User, blank=True, null=True, related_name='owner', on_delete=models.PROTECT)
     logo = models.ImageField(upload_to="business/logos", blank=True, null=True)
     category = models.ForeignKey(Category, related_name="company", blank=True, null=True, on_delete=models.PROTECT)
     email = models.EmailField(help_text="This is required")
@@ -49,11 +47,10 @@ class Business(Common, UrlMixin, MetaTagsMixin):
     services = TaggableManager(through=SameServices, blank=True, verbose_name='services')
     verified = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
-    hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk',
-                                        related_query_name='hit_count_generic_relation')
 
     reviews = GenericRelation(Review)
     bookmark = GenericRelation(Bookmark)
+    hit_count = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
 
     class Meta:
         verbose_name = "biashara"

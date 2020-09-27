@@ -13,14 +13,14 @@ from django.views.generic import CreateView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin, DetailView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.query import SearchQuerySet
-from hitcount.models import HitCount
-from hitcount.utils import RemovedInHitCount13Warning
-from hitcount.views import HitCountMixin
 
 from business.models import Business, BusinessImage
 from comments.forms import CommentForm
+from hitcount.models import HitCount
+from hitcount.utils import RemovedInHitCount13Warning
+from hitcount.views import HitCountMixin
 from reviews.forms import ReviewForm
-from .forms import BusinessForm, BusinessPhotoFormSet, BusinessPhotoFormSetHelper, ClaimBusinessForm, BusinessSearchForm
+from .forms import BusinessForm, BusinessPhotoFormSet, BusinessPhotoFormSetHelper, BusinessSearchForm
 
 
 def autocomplete(request):
@@ -71,9 +71,6 @@ class BusinessCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-
-
-
 @login_required
 def add_photos(request, slug):
     """company = get_object_or_404(Business, slug=slug)"""
@@ -103,23 +100,6 @@ def add_photos(request, slug):
         "form": form,
     }
     return render(request, "business/formset.html", context)
-
-
-class ClaimBusiness(LoginRequiredMixin, UpdateView):
-    model = Business
-    slug_url_kwarg = 'slug'
-    form_class = ClaimBusinessForm
-    template_name = 'business/form.html'
-
-    # def get_object(self, *args, **kwargs):
-    #     obj = super().get_object(*args, **kwargs)
-    #     if not obj.owner:
-    #         if not obj.user == self.request.user and not self.request.user.is_superuser:
-    #             raise PermissionDenied
-    #     elif not obj.owner == self.request.user and not self.request.user.is_superuser:
-    #         raise PermissionDenied
-    #     else:
-    #         return obj
 
 
 class BusinessEdit(LoginRequiredMixin, UpdateView):

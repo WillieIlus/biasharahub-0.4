@@ -17,7 +17,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 AUTH_USER_MODEL = 'accounts.User'
 
-
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
@@ -42,9 +41,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'invitations',
     'django_social_share',
-    # 'import-export',
+    'import_export',
     'haystack',
-    'hitcount',
+    'guardian',
     'markdown_deux',
     'pagedown',
     'taggit',
@@ -55,6 +54,7 @@ INSTALLED_APPS = [
     'categories',
     'comments',
     'favourites',
+    'hitcount',
     'locations',
     'openinghours',
     'reviews',
@@ -153,8 +153,8 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = [
     'accounts.backends.EmailBackend',
-    # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
 ]
 
 HAYSTACK_CONNECTIONS = {

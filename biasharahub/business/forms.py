@@ -4,7 +4,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 # from django.contrib.admin import widgets
-from django.core.checks import Tags
 from django.forms import inlineformset_factory, ModelForm
 from django.utils.translation import ugettext_lazy as _
 from haystack.forms import FacetedSearchForm
@@ -56,20 +55,6 @@ class BusinessFilterForm(forms.Form):
     )
     location = forms.ModelChoiceField(label=_("Location"), required=False, queryset=Location.objects.all(), )
     rating = forms.ChoiceField(label=_("Rating"), required=False, choices=RATING_CHOICES, )
-
-
-class ClaimBusinessForm(ModelForm):
-    class Meta:
-        model = Business
-        fields = ('owner',)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            'owner',
-            Submit('submit', 'Submit'),
-        )
 
 
 BusinessPhotoFormSet = inlineformset_factory(Business, BusinessImage, fields=('img', 'alt'),

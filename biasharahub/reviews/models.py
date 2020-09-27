@@ -4,11 +4,11 @@ from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.text import slugify
-from hitcount.models import HitCount
 
 from accounts.models import User
 from comments.models import Comment
 from favourites.models import Vote
+from hitcount.models import HitCount
 from utility.models import UrlMixin
 
 RATING_CHOICES = (
@@ -33,8 +33,7 @@ class Review(UrlMixin, models.Model):
     title = models.CharField(max_length=600)
     slug = models.SlugField(max_length=200, blank=True, null=True)
     rating = models.IntegerField(choices=RATING_CHOICES, default=1)
-    hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk',
-                                        related_query_name='hit_count_generic_relation')
+    hit_count_generic = GenericRelation(HitCount, )
 
     comments = GenericRelation(Comment)
     votes = GenericRelation(Vote, related_query_name='review')
