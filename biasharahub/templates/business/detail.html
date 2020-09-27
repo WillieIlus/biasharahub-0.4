@@ -337,7 +337,9 @@
                 <div class="atbd_review_top">
                   <div class="atbd_avatar_wrapper">
                     <div class="atbd_review_avatar"><img alt="" class="avatar avatar-32 photo"
-                                                         src="img/review-author-thumb.jpg"></div>
+                                                         {% if review.user.user.photo %}
+                                                         src="img/review-author-thumb.jpg"
+                    {% endif %}></div>
                     <div class="atbd_name_time">
                       <p>{{ review.user.username }}</p>
                       <span class="review_time">{{ review.publish|timesince }} ago</span>
@@ -380,7 +382,9 @@
                 <div class="review_reply_form">
                   <div class="atbd_review_avatar"><img alt=""
                                                        class="avatar avatar-32 photo"
-                                                       src="static/img/review-author-thumb2.jpg"></div>
+                                                       {% if review.review.user.photo %}
+                                                       src="static/img/review-author-thumb2.jpg"
+                  {% endif %}></div>
                   <form action="{% url 'comments:new_comment' review.slug %}"
                         enctype="multipart/form-data"
                         id="atbdp_review_form"
@@ -397,7 +401,9 @@
                       <div class="atbd_avatar_wrapper">
                         <div class="atbd_review_avatar"><img alt=""
                                                              class="avatar avatar-32 photo"
-                                                             src="static/img/review-author-thumb2.jpg">
+                                                             {% if comment in comment.user.photo %}
+                                                             src="static/img/review-author-thumb2.jpg"
+                        {% endif %}>
                         </div>
                         <div class="atbd_name_time">
                           <p>{{ comment.user }}</p>
@@ -665,7 +671,6 @@
         {% get_related_business %}
         <!-- ends: .widget -->
         <!--popular business widget-->
-        {% get_popular_business %}
         <!-- ends: .widget -->
       </div>
     </div>
