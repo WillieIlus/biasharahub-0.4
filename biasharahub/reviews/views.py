@@ -75,20 +75,20 @@ class ReviewDetail(SingleObjectMixin, ListView, HitCountMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
-
-        if self.object:
-            hit_count = Review.objects.get_for_object(self.object)
-            hits = hit_count.hits
-            context['hitcount'] = {'pk': hit_count.pk}
-
-            if self.count_hit:
-                hit_count_response = self.hit_count(self.request, hit_count)
-                if hit_count_response.hit_counted:
-                    hits = hits + 1
-                context['hitcount']['hit_counted'] = hit_count_response.hit_counted
-                context['hitcount']['hit_message'] = hit_count_response.hit_message
-
-            context['hitcount']['total_hits'] = hits
+        #
+        # if self.object:
+        #     hit_count = Review.objects.all(self.object)
+        #     hits = hit_count.hits
+        #     context['hitcount'] = {'pk': hit_count.pk}
+        #
+        #     if self.count_hit:
+        #         hit_count_response = self.hit_count(self.request, hit_count)
+        #         if hit_count_response.hit_counted:
+        #             hits = hits + 1
+        #         context['hitcount']['hit_counted'] = hit_count_response.hit_counted
+        #         context['hitcount']['hit_message'] = hit_count_response.hit_message
+        #
+        #     context['hitcount']['total_hits'] = hits
 
         return context
 

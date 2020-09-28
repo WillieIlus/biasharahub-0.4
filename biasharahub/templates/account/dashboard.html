@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
-{% load hitcount_tags%}
 
 {% block title %}  {{ user.get_full_name }}  | {{ block.super }} {% endblock %}
 
@@ -65,102 +64,99 @@
           <div class="col-lg-4 col-sm-6">
             <div class="atbd_single_listing ">
               <article class="atbd_single_listing_wrapper">
-                    <figure class="atbd_listing_thumbnail_area">
-                      <div class="atbd_listing_image">
-                        <a href="{{ business.get_absolute_url }}">
-                          <img alt="listing image" src='{% if business.featured_image %}
+                <figure class="atbd_listing_thumbnail_area">
+                  <div class="atbd_listing_image">
+                    <a href="{{ business.get_absolute_url }}">
+                      <img alt="listing image" src='{% if business.featured_image %}
                           {{ business.featured_image }}
                           {% else %} {% static "img/p1.jpg" %} {% endif %}'>
-                        </a>
-                      </div><!-- ends: .atbd_listing_image -->
-                      <div class="atbd_thumbnail_overlay_content">
-                        <ul class="atbd_upper_badge">
-                          {% if business.featured %}
-                          <li><span class="atbd_badge atbd_badge_featured">Featured</span></li>
-                          {% endif %}
-                          {% if business.verified %}
-                          <li><span class="atbd_badge atbd_badge_popular">Verified</span></li>
-                          {% endif %}
-                        </ul><!-- ends .atbd_upper_badge -->
-                      </div><!-- ends: .atbd_thumbnail_overlay_content -->
-                    </figure><!-- ends: .atbd_listing_thumbnail_area -->
+                    </a>
+                  </div><!-- ends: .atbd_listing_image -->
+                  <div class="atbd_thumbnail_overlay_content">
+                    <ul class="atbd_upper_badge">
+                      {% if business.featured %}
+                      <li><span class="atbd_badge atbd_badge_featured">Featured</span></li>
+                      {% endif %}
+                      {% if business.verified %}
+                      <li><span class="atbd_badge atbd_badge_popular">Verified</span></li>
+                      {% endif %}
+                    </ul><!-- ends .atbd_upper_badge -->
+                  </div><!-- ends: .atbd_thumbnail_overlay_content -->
+                </figure><!-- ends: .atbd_listing_thumbnail_area -->
                 <div class="atbd_listing_info">
                   <div class="atbd_content_upper">
                     <h4 class="atbd_listing_title">
-                          <a href="{{ business.get_url_path }}">{{ business.name }}</a>
-                        </h4>
-                        <div class="atbd_listing_meta">
+                      <a href="{{ business.get_url_path }}">{{ business.name }}</a>
+                    </h4>
+                    <div class="atbd_listing_meta">
                           <span class="atbd_meta atbd_listing_rating">
                                                       {% if business.reviews.count > 3 %}
                             {{ business.average_rating | floatformat }}
                           {% else %}
                           need 3+
                             <i class="la la-star"></i></span>
-                          {% endif %}
-                          {% comment %}
-                          {% if business.is_open and business.closed == False %}
-                          <span class="atbd_meta atbd_badge_open">Open Now</span>
-                          {% else %}
-                          <span class="atbd_meta atbd_badge_close">Closed</span>
-                          {% endif %}
-                          {% endcomment %}
-                        </div><!-- End atbd listing meta -->
-                        <div class="atbd_listing_data_list">
-                          <ul>
-                            {% if business.address %}
-                            <li>
-                              <p><span class="la la-map-marker"></span>{{ business.address }},
-                                {% if business.location %}
-                                {{ business.location }}, {{ business.location.country }}
-                                {% endif %}
-                              </p>
-                            </li>
+                      {% endif %}
+                      {% comment %}
+                      {% if business.is_open and business.closed == False %}
+                      <span class="atbd_meta atbd_badge_open">Open Now</span>
+                      {% else %}
+                      <span class="atbd_meta atbd_badge_close">Closed</span>
+                      {% endif %}
+                      {% endcomment %}
+                    </div><!-- End atbd listing meta -->
+                    <div class="atbd_listing_data_list">
+                      <ul>
+                        {% if business.address %}
+                        <li>
+                          <p><span class="la la-map-marker"></span>{{ business.address }},
+                            {% if business.location %}
+                            {{ business.location }}, {{ business.location.country }}
                             {% endif %}
-                            <li>
-                              {% if business.phone %}
-                              <p><span class="la la-phone"></span>(+254) {{ business.phone }}</p>
-                              {% endif %}
-                            </li>
-                            <li>
-                              <p><span class="la la-calendar-check-o"></span>
-                                {{ business.publish|date }}, ({{ business.publish|timesince }} ago)</p>
-                            </li>
-                          </ul>
-                        </div><!-- End atbd listing meta -->
-                      </div><!-- end .atbd_content_upper -->
-                      <div class="atbd_listing_bottom_content">
-                        <div class="atbd_content_left">
-                          <div class="atbd_listing_category">
-                            {% if business.category %}
-                            <a href=""><span class="{{ business.category.icon }}"></span>{{ business.category }}</a>
-                            {% endif %}
-                          </div>
-                        </div>
-                        <ul class="atbd_content_right">
-                          <li class="atbd_count"><span class="la la-eye"></span>
-                            {% get_hit_count for business %}+
-                          </li>
-                          <li class="atbd_save">
-                            <span href="{% url 'business:bookmark' slug=business.slug %}" class="la la-heart-o"></span>
-                          </li>
-                          <li>
-                            <div class="atbd_author atbd_author--thumb">
-                              <a href="{{ business.get_absolute_url }}">
-                                <img alt="Logo" src='{% if business.logo %}
+                          </p>
+                        </li>
+                        {% endif %}
+                        <li>
+                          {% if business.phone %}
+                          <p><span class="la la-phone"></span>(+254) {{ business.phone }}</p>
+                          {% endif %}
+                        </li>
+                        <li>
+                          <p><span class="la la-calendar-check-o"></span>
+                            {{ business.publish|date }}, ({{ business.publish|timesince }} ago)</p>
+                        </li>
+                      </ul>
+                    </div><!-- End atbd listing meta -->
+                  </div><!-- end .atbd_content_upper -->
+                  <div class="atbd_listing_bottom_content">
+                    <div class="atbd_content_left">
+                      <div class="atbd_listing_category">
+                        {% if business.category %}
+                        <a href=""><span class="{{ business.category.icon }}"></span>{{ business.category }}</a>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <ul class="atbd_content_right">
+                      <li class="atbd_count"><span class="la la-eye"></span>
+                        10+
+                      </li>
+                      <li class="atbd_save">
+                        <span href="{% url 'business:bookmark' slug=business.slug %}" class="la la-heart-o"></span>
+                      </li>
+                      <li>
+                        <div class="atbd_author atbd_author--thumb">
+                          <a href="{{ business.get_absolute_url }}">
+                            <img alt="Logo" src='{% if business.logo %}
                           {{ business.logo.url }} {% else %} {% static "img/author-thumb2.jpg" %} {% endif %}'>
-                                <span class="custom-tooltip">{{ business.name }}</span>
-                              </a>
-                            </div>
-                          </li>
-                        </ul>
-                      </div><!-- end .atbd_listing_bottom_content -->
-                    </div><!-- ends: .atbd_listing_info -->
-                  </article><!-- atbd_single_listing_wrapper -->
+                            <span class="custom-tooltip">{{ business.name }}</span>
+                          </a>
+                        </div>
+                      </li>
+                    </ul>
+                  </div><!-- end .atbd_listing_bottom_content -->
+                </div><!-- ends: .atbd_listing_info -->
+              </article><!-- atbd_single_listing_wrapper -->
             </div>
           </div><!-- ends: .col-md-6 -->
-
-
-
 
 
           {% endfor %}
@@ -187,9 +183,11 @@
                   <a href="{{ review.get_absolute_url }}"><img alt="" src="img/c4.jpg"></a>
                 </figure>
                 <div class="card-body">
-                  <h6><a href="{{ review.get_absolute_url }}">{{ review.title }}</a></h6>
+                  <h6><a href="{{ review.get_absolute_url }}">
+                    {{ review.user.first_name }} reviewed {{ review.content_object.name }}
+                  </a></h6>
                   <ul class="post-meta d-flex list-unstyled">
-                    <li>{{ review.publish|date }} ({{ review.publish|timesince }} ago) </li>
+                    <li>{{ review.publish|date }} ({{ review.publish|timesince }} ago)</li>
                   </ul>
                   <ul class="post-meta d-flex list-unstyled">
                     <li>to <a href="{{ review.content_object.get_absolute_url }}">{{ review.content_object.name }}</a>

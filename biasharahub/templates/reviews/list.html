@@ -28,19 +28,23 @@
           {% for review in review %}
           <div class="blog-single">
             <div class="card post--card post--card2 ">
+              {% if review.featured_image %}
               <figure>
-                <a href="{{ review.get_absolute_url }}"><img alt="" src='{% if review.featured_image %}
-                {{ review.featured_image }} {% else %} {% static "img/breadcrumb1.jpg" %}{% endif %}'></a>
+                <a href="{{ review.get_absolute_url }}"><img alt="" src='
+                {{ review.featured_image }}'></a>
                 <figcaption>
                   <a href="{{ review.get_absolute_url }}"><i class="la la-image"></i></a>
                 </figcaption>
-              </figure>
+              </figure>{% endif %}
               <div class="card-body">
-                <h3><a href="{{ review.get_absolute_url }}">{{ review.user }}</a></h3>
+                <h6><a href="{{ review.get_absolute_url }}">
+                  {{ review.user.first_name }} reviewed {{ review.content_object.name }}
+                </a></h6>
                 <ul class="post-meta list-unstyled">
                   <li>{{ review.publish|date }} ( {{ review.publish|timesince }} ago )</li>
                   <li>by <a href="{{ review.user.get_absolute_url }}">{{ review.user }}</a></li>
-                  <li>to <a href="{{ review.content_object.get_absolute_url }}">{{ review.content_object.name }}</a></li>
+                  <li>to <a href="{{ review.content_object.get_absolute_url }}">{{ review.content_object.name }}</a>
+                  </li>
                   <li><a href="{{ review.get_absolute_url }}">{{ review.comments.count }}
                     Comment{{ review.comments.count|pluralize }}</a></li>
                 </ul>
@@ -71,7 +75,7 @@
           </div><!-- ends: .widget-wrapper -->
 
 
-                    <!-- category widget -->
+          <!-- category widget -->
           {% get_categories 5 %}
           <!-- ends: .widget-wrapper -->
 

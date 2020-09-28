@@ -82,7 +82,11 @@
                           {% endif %}
                           {% endcomment %}
                         </div><!-- End atbd listing meta -->
-                        <div><p>{{ business.description|truncatewords:"25" }}</p></div>
+                        {% if business.description %}
+                        <div><p>{{ business.get_markdown|truncatewords:"25" }}</p></div>
+                        {% else %}
+                        <p>{{ business.name }} has decided to put an air of heightened hysteria around them</p>
+                        {% endif %}
                         <div class="pull-right">
                           <a href="{{ business.get_absolute_url }}"
                              class="btn btn-gradient btn-gradient-one btn-block btn-icon icon-right m-top-40">
@@ -108,7 +112,7 @@
                             </li>
                             <li>
                               <p><span class="la la-calendar-check-o"></span>
-                                Posted {{ business.publish|timesince }} ago ( {{ business.publish|date }} )</p>
+                                Posted {{ business.publish|date }}, ( {{ business.publish|timesince }} ago )</p>
                             </li>
                           </ul>
                         </div><!-- End atbd listing meta -->
