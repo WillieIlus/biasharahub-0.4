@@ -45,7 +45,7 @@ class CustomSignupForm(SignupForm):
                 Column('password2', css_class='mt-10 form-group col-md-6 col-sm-12 mb-0'),
                 css_class='form-row'
             ),
-            'remember_me',
+            # 'remember_me',
             Submit('submit', 'Signup', css_class='btn btn-block btn-lg btn-gradient btn-gradient-two'),
         )
 

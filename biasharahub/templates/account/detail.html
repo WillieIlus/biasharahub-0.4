@@ -137,7 +137,7 @@
                   <div class="atbd_author atbd_author--thumb">
                     <a href="{{ business.get_absolute_url }}">
                       <img alt="Logo" class="img-fluid" width="50px" src='{% if business.logo %}
-                          {{ business.logo.url }} {% else %} {% static "img/author-thumb2.jpg" %} {% endif %}'>
+                          {{ business.logo.url }} {% else %} {% endif %}'>
                       <span class="custom-tooltip">{{ business.name }}</span>
                     </a>
                   </div>
@@ -160,8 +160,10 @@
                     <div class="atbd_listing_meta">
                       <span class="atbd_meta atbd_listing_rating">{{ business.average_rating | floatformat }}
                         <i class="la la-star"></i></span>
+                      {% comment %}
                       <span class="atbd_meta atbd_listing_price">$55.00</span>
                       <span class="atbd_meta atbd_badge_open">Open Now</span>
+                      {% endcomment %}
                     </div><!-- End atbd listing meta -->
                     <div class="atbd_listing_data_list">
                       <ul>

@@ -17,10 +17,10 @@ class Home(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['business'] = Business.objects.all()
-        context['location'] = Location.objects.all()
-        context['category'] = Category.objects.all()
-        context['review'] = Review.objects.all()
+        context['business'] = Business.objects.order_by('-publish')[:9]
+        context['location'] = Location.objects.order_by('-publish')[:6]
+        context['category'] = Category.objects.order_by('-publish')[:6]
+        context['review'] = Review.objects.order_by('-publish')[:9]
 
         return context
 

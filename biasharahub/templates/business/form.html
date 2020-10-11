@@ -29,10 +29,35 @@
         </div>
         <div class="atbdb_content_module_contents">
 
-          <form action="." class="form-ad" enctype="multipart/form-data" method="POST">
+          <form action="." class="uniForm" enctype="multipart/form-data" method="POST">
             <div class="form-group is-empty">
               {% csrf_token %}
               {% crispy form %}
+              <fieldset>
+                <legend>Social Profile</legend>
+                {{ social_form.management_form }}
+                {{ social_form.non_form_errors }}
+                {% for form in social_form %}
+                <div class="form-row">
+                  <div class="mt-10 form-group col-md-3 mb-0">
+                    {{ form.network|as_crispy_field }}
+                  </div>
+                  <div class="mt-10 form-group col-md-3 mb-0">
+                    {{ form.username|as_crispy_field }}
+                  </div>
+                  <div class="mt-10 form-group col-md-6 mb-0">
+                    {{ form.url|as_crispy_field }}
+                  </div>
+                </div>
+                  {% endfor %}
+                              </fieldset>&nbsp;
+              <div class="clearfix">
+                <div class=" pull-right">
+                <a role="button" class="btn btn-lg btn-danger" href="{% url 'home' %}">Cancel</a>
+                <input type="submit" class="btn btn-lg btn-success" value="Submit"
+                       name="submit">
+                </div>
+              </div>
             </div>
           </form>
 

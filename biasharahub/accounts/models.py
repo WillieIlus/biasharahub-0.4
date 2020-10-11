@@ -92,7 +92,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Network(models.Model):
     network = models.CharField(max_length=254)
-    Icon = models.CharField(max_length=254)
+    icon = models.CharField(max_length=254)
+
+    def __str__(self):
+        return self.network
 
 
 class SocialProfile(models.Model):
@@ -100,3 +103,6 @@ class SocialProfile(models.Model):
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
     username = models.CharField(max_length=254)
     url = models.URLField(max_length=500)
+
+    def __str__(self):
+        return self.username

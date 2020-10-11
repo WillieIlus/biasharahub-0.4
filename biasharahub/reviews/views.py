@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
+from accounts.decorators import UserRequiredMixin
 from business.models import Business
 from comments.forms import CommentForm
 from hitcount.views import HitCountMixin
@@ -48,7 +49,7 @@ def photos(request, slug):
     return render(request, "business/formset.html", context)
 
 
-class ReviewEdit(LoginRequiredMixin, UpdateView):
+class ReviewEdit(LoginRequiredMixin,  UserRequiredMixin, UpdateView):
     model = Review
     form_class = ReviewForm
     template_name = 'includes/form.html'
@@ -61,7 +62,7 @@ class ReviewList(ListView):
     paginate_by = 10
 
 
-class ReviewDetail(SingleObjectMixin, ListView, HitCountMixin):
+class ReviewDetail(SingleObjectMixin, ListView):
     model = Review
     paginate_by = 10
     context_object_name = 'review'
@@ -75,20 +76,7 @@ class ReviewDetail(SingleObjectMixin, ListView, HitCountMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
-        #
-        # if self.object:
-        #     hit_count = Review.objects.all(self.object)
-        #     hits = hit_count.hits
-        #     context['hitcount'] = {'pk': hit_count.pk}
-        #
-        #     if self.count_hit:
-        #         hit_count_response = self.hit_count(self.request, hit_count)
-        #         if hit_count_response.hit_counted:
-        #             hits = hits + 1
-        #         context['hitcount']['hit_counted'] = hit_count_response.hit_counted
-        #         context['hitcount']['hit_message'] = hit_count_response.hit_message
-        #
-        #     context['hitcount']['total_hits'] = hits
+
 
         return context
 

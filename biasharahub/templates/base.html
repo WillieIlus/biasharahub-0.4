@@ -7,13 +7,14 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  {% block head %}
   <meta content="Nairobi Biashara Hub" name="description">
   <meta content=" Prices, Business,online, directory,CV,Resume, Insurance, Loan, opening" name="keywords">
   <meta content="BiasharaHub" name="author">
-{% block head %}{% endblock %}
+  {% endblock %}
   <title>{% block title %} BiasharaHub {% endblock %}</title>
   <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,600,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css">
+  <script src="https://use.fontawesome.com/495762792b.js"></script>
   <!-- inject:css-->
   <link href="{% static 'css/bootstrap/bootstrap.css' %}" rel="stylesheet">
   <link href="{% static 'css/brands.css' %}" rel="stylesheet">

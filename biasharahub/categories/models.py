@@ -6,7 +6,6 @@ from django.urls import reverse
 from utility.models import Common
 
 
-
 class Category(Common):
     icon = models.CharField(max_length=256, null=True, blank=True, default="")
 

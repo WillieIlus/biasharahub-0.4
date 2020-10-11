@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'invitations',
     'django_social_share',
+    'extra_views',
     'import_export',
     'haystack',
     'guardian',

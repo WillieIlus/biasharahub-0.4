@@ -1,12 +1,9 @@
 from datetime import time
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
 from django import forms
-from django.forms import ModelForm, inlineformset_factory
+from django.forms import ModelForm, TimeInput
 
-from business.models import Business
-from openinghours.models import OpeningHours
+from openinghours.models import OpeningHours, WEEKDAYS
 
 
 def str_to_time(s):
@@ -38,50 +35,41 @@ class Slot(forms.Form):
     shuts = forms.ChoiceField(choices=TIME_CHOICES)
 
 
-# class BaseOpeningHoursFormset(BaseFormSet):
-#     def clean(self):
-#         weekdays = []
-#         for form in self.forms:
-#             weekday = form.cleaned_data['weekday']
-#             if weekday in weekdays:
-#                 raise forms.ValidationError("Articles in a set must have distinct titles.")
-#             weekdays.append(weekday)
-
-
 class OpeningHoursForm(ModelForm):
-    # weekday = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'True'}))
-    start = forms.ChoiceField(choices=TIME_CHOICES, label='Opening', required=False)
-    end = forms.ChoiceField(choices=TIME_CHOICES, label='Closing', required=False)
+    weekday = forms.ChoiceField(required=False, choices=WEEKDAYS)
+    start = forms.TimeField(input_formats=['%H:%M'], label='Opening', required=False,
+                            widget=forms.TimeInput(attrs={'type': 'time'}))
+    end = forms.TimeField(input_formats=['%H:%M'], label='Closing', required=False,
+                            widget=forms.TimeInput(attrs={'type': 'time'}))
 
-    def __init__(self, *args, disabled_weekday=True, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['weekday'].disabled = disabled_weekday
+        self.fields['weekday']
+        # self.fields['weekday'].disabled = disabled_weekday
 
     class Meta:
         model = OpeningHours
-        # fields = ('start', 'end', 'closed')
         fields = ('weekday', 'start', 'end', 'closed')
-
-
-OpeningHoursFormset = inlineformset_factory(Business, OpeningHours, OpeningHoursForm, extra=0, max_num=7, min_num=7,
-                                            can_delete=False, can_order=False)
-
+        widget = {
+            'start': TimeInput(attrs={'type': 'time'}),
+            'start': TimeInput(attrs={'type': 'time'})
+        }
 
 # formset = OpeningHoursFormset(initial=[{'weekday': x} for x in OpeningHours.weekday.choices])
 
-
-class OpeningHoursFormsetHelper(FormHelper):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # self.helper = FormHelper()
-        self.form_class = 'form-inline'
-        self.field_template = 'bootstrap4/layout/inline_field.html'
-        self.layout = Layout(
-            Row(
-                Column('weekday', readonly=True, css_class='atbd_day_label form-label col-md-3 mb-1'),
-                Column('start', css_class='directory_field col-md-4 mb-1'),
-                Column('end', css_class=' directory_field col-md-4 mb-1'),
-                Column('closed', css_class='custom-control-label col-md-1 mb-1'),
-            ),
-            self.add_input(Submit("submit", "Save", css_class='btn btn-gradient'))
-        )
+#
+# class OpeningHoursFormsetHelper(FormHelper):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         # self.helper = FormHelper()
+#         self.form_class = 'form-inline'
+#         self.field_template = 'bootstrap4/layout/inline_field.html'
+#         self.layout = Layout(
+#             Row(
+#                 Column('weekday', readonly=True, css_class='atbd_day_label form-label col-md-3 mb-1'),
+#                 Column('start', css_class='directory_field col-md-4 mb-1'),
+#                 Column('end', css_class=' directory_field col-md-4 mb-1'),
+#                 Column('closed', css_class='custom-control-label col-md-1 mb-1'),
+#             ),
+#             self.add_input(Submit("submit", "Save", css_class='btn btn-gradient'))
+#         )

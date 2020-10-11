@@ -23,19 +23,16 @@ formset
           <form enctype="multipart/form-data" class="form-ad" action="." method="POST">
             <div class="form-group is-empty"><br/>
               {% csrf_token %}
-              {{ formset.management_form }}
-              {{ formset.non_form_errors }}
+              {% crispy form %}
               <div class="form-row">
-                {% for form in formset %}
-                <div class="mt-10 form-group col-md-6 mb-0">
-                  {{ form.img|as_crispy_field }}
-                </div>
-                <div class="mt-10 form-group col-md-3 mb-0">
-                  {{ form.alt|as_crispy_field }}
+                {{ formset.management_form|crispy }}
+                {{ formset.non_form_errors }}
+                {% for formset in inlines %}
+                <div class="mt-10 form-group col-md-11 clearfix">
+                  {{ formset|crispy }}
                 </div>&nbsp;
                 {% endfor %}
               </div>
-              &nbsp;
               <a role="button" class="btn btn-lg btn-danger pull-right" href="{% url 'home' %}">Cancel</a>
               <input type="submit" class="btn btn-lg btn-success pull-right" value="Submit"
                      name="submit">

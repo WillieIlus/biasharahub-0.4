@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
+from accounts.decorators import UserRequiredMixin
 from comments.forms import CommentForm
 from reviews.models import Review
 from .models import Comment
@@ -52,7 +53,7 @@ class CommentReviewBusiness(LoginRequiredMixin, CommentCreateMixin, CreateView):
         return reverse('business:detail', kwargs={'slug': self.object.content_object.content_object.slug})
 
 
-class CommentEdit(LoginRequiredMixin, UpdateView):
+class CommentEdit(LoginRequiredMixin,  UserRequiredMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     template_name = 'includes/form.html'

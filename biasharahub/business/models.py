@@ -5,6 +5,7 @@ from statistics import mean
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.db.models.signals import pre_save
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
@@ -12,7 +13,7 @@ from markdown_deux import markdown
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItemBase
 
-from accounts.models import User
+from accounts.models import User, Network
 from categories.models import Category
 from favourites.models import Bookmark
 from hitcount.models import Hit
@@ -28,16 +29,9 @@ class SameServices(TaggedItemBase):
 class Business(Common, UrlMixin, MetaTagsMixin):
     user = models.ForeignKey(User, related_name='added_by', on_delete=models.PROTECT)
     logo = models.ImageField(upload_to="business/logos", blank=True, null=True)
-    category = models.ForeignKey(Category, related_name="company", blank=True, null=True, on_delete=models.PROTECT)
     email = models.EmailField(help_text="This is required")
-
     website = models.URLField(blank=True, null=True, help_text="Please start with 'https://www.'")
-    facebook = models.URLField(blank=True, null=True, help_text="Please leave empty if none")
-    twitter = models.URLField(blank=True, null=True, help_text="Please leave empty if none")
-    linkedin = models.URLField(blank=True, null=True, help_text="Please leave empty if none")
-    instagram = models.URLField(blank=True, null=True, help_text="Please leave empty if none")
-    youtube = models.URLField(blank=True, null=True, help_text="Please leave empty if none")
-
+    category = models.ForeignKey(Category, related_name="company", blank=True, null=True, on_delete=models.PROTECT)
     address = models.CharField(max_length=255, blank=True, )
     location = models.ForeignKey(Location, related_name='company', blank=True, null=True,
                                  help_text="Please leave empty if 100% virtual",
@@ -69,10 +63,7 @@ class Business(Common, UrlMixin, MetaTagsMixin):
         return reverse('business:detail', kwargs={'slug': self.slug})
 
     def can_edit(self, request):
-        if request.user is self.owner:
-            can_edit = True
-            return can_edit
-        elif request.user is self.user and self.owner is None:
+        if request.user is self.user:
             can_edit = True
             return can_edit
         else:
@@ -157,10 +148,30 @@ class Business(Common, UrlMixin, MetaTagsMixin):
     #
 
 
+def pre_save_business_receiver(sender, instance, *args, **kwargs):
+    # if not instance.slug:
+    #     instance.slug = create_slug(instance)
+    if not instance.meta_description:
+        if instance.description:
+            instance.meta_description = instance.description
+    if not instance.meta_author:
+        if instance.user.first_name:
+            instance.meta_author = instance.user.first_name
+            instance.meta_copyright = instance.user.first_name
+        else:
+            instance.meta_author = instance.user
+    if not instance.meta_keywords:
+        if instance.name:
+            instance.meta_keywords = instance.name
+
+
+pre_save.connect(pre_save_business_receiver, sender=Business)
+
+
 class BusinessImage(models.Model):
     business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='photos')
-    img = models.ImageField(upload_to='business/photos', null=True)
-    alt = models.CharField(max_length=256, null=True, default="photo")
+    img = models.ImageField(upload_to='business/photos', null=True, blank=True)
+    alt = models.CharField(max_length=256, null=True, blank=True)
 
     def __str__(self):
         return self.img.url
@@ -172,3 +183,13 @@ class BusinessImage(models.Model):
     def get_meta_image(self):
         if self.img:
             return self.img.url
+
+
+class CompanySocialProfile(models.Model):
+    business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='network')
+    network = models.ForeignKey(Network, on_delete=models.CASCADE)
+    username = models.CharField(max_length=254)
+    url = models.URLField(max_length=500)
+
+    def __str__(self):
+        return self.username

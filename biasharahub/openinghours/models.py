@@ -21,8 +21,8 @@ class OpeningHours(models.Model):
     company = models.ForeignKey(Business, verbose_name=_('company'), related_name='opening_hours',
                                 on_delete=models.CASCADE)
     weekday = models.IntegerField(_('Weekday'), choices=WEEKDAYS)
-    start = models.TimeField(_('Start'), default='8:00')
-    end = models.TimeField(_('End'), default='18:00')
+    start = models.TimeField(_('Start'), default='8:00', null=True, blank=True )
+    end = models.TimeField(_('End'), default='18:00', null=True, blank=True)
     closed = models.BooleanField(verbose_name=_('Closed'))
 
     class Meta:

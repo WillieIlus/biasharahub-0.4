@@ -2,7 +2,12 @@
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 {% load biasharahub %}
-{% block head %}{{ business.get_meta_tags }}{% endblock %}
+{% block head %}
+{{ business.get_meta_description|truncatechars:254 }}
+{{ business.get_meta_keywords }}
+{{ business.get_meta_author }}
+{{ business.get_meta_copyright }}
+{% endblock %}
 <title>{% block title %} {{ business.name }} | {{ block.super }} {% endblock %}</title>
 {% block headcrumb-wrapper %}
 {% endblock %}
@@ -306,18 +311,10 @@
               </ul>
             </div>
             <div class="atbd_director_social_wrap">
-              {% if business.instagram %}
-              <a href="{{ business.instagram }}" target="_blank"><span class="fab fa-instagram"></span></a>
-              {% endif %}
-              {% if business.facebook %}
-              <a href="{{ business.facebook }}" target="_blank"><span class="fab fa-facebook-f"></span></a>
-              {% endif %}
-              {% if business.twitter %}
-              <a href="{{ business.twitter }}" target="_blank"><span class="fab fa-twitter"></span></a>
-              {% endif %}
-              {% if business.youtube %}
-              <a href="{{ business.youtube }}" target="_blank"><span class="fab fa-youtube"></span></a>
-              {% endif %}
+              {% for network in business.network.all %}
+              <a class="atbd_info" href="{{ network.url }}"><span class="{{ network.network.icon }}"></span></a>
+              <span class="custom-tooltip">{{ network.name }}</span>
+              {% endfor %}
             </div>
           </div>
         </div><!-- ends: .atbd_content_module -->
@@ -326,7 +323,7 @@
             <div class="atbd_area_title">
               <h4><span class="la la-star-o"></span>{{ business.reviews.count }}
                 Review{{ business.reviews.count|pluralize }}</h4>
-                      {% if not request.user == business.user %}
+              {% if not request.user == business.user %}
               <label class="btn btn-secondary btn-icon-left btn-sm not_empty" for="review_content"><span
                   class="la la-star-o"></span> Add a review</label>
               {% endif %}
@@ -341,7 +338,7 @@
                     <div class="atbd_review_avatar"><img alt="" class="avatar avatar-32 photo"
                                                          {% if review.user.user.photo %}
                                                          src="img/review-author-thumb.jpg"
-                    {% endif %}></div>
+                                                         {% endif %}></div>
                     <div class="atbd_name_time">
                       <p>{{ review.user.username }}</p>
                       <span class="review_time">{{ review.publish|timesince }} ago</span>
@@ -375,10 +372,10 @@
                   <div class="action_button pull-right">
                     <a class=" btn btn-xs btn-secondary" href="{% url 'reviews:vote_up' slug=review.slug %}"></span>
                       Like |
-                    <span>{{ review.votes.likes.count }}</span></a>
+                      <span>{{ review.votes.likes.count }}</span></a>
                     <a class=" btn btn-xs btn-danger" href="{% url 'reviews:vote_down' slug=review.slug %}"></span>
                       Dislike |
-                    <span>{{ review.votes.dislikes.count }}</span></a>
+                      <span>{{ review.votes.dislikes.count }}</span></a>
                   </div>
                 </div>
                 <div class="review_reply_form">
@@ -386,7 +383,7 @@
                                                        class="avatar avatar-32 photo"
                                                        {% if review.review.user.photo %}
                                                        src="static/img/review-author-thumb2.jpg"
-                  {% endif %}></div>
+                                                       {% endif %}></div>
                   <form action="{% url 'comments:new_comment' review.slug %}"
                         enctype="multipart/form-data"
                         id="atbdp_review_form"
@@ -405,7 +402,7 @@
                                                              class="avatar avatar-32 photo"
                                                              {% if comment in comment.user.photo %}
                                                              src="static/img/review-author-thumb2.jpg"
-                        {% endif %}>
+                                                             {% endif %}>
                         </div>
                         <div class="atbd_name_time">
                           <p>{{ comment.user }}</p>
@@ -500,7 +497,8 @@
             {% if not request.user.is_authenticated %}
             <div class="atbd_notice alert alert-info" role="alert">
               <span aria-hidden="true" class="la la-info"></span>
-              You need to <a href="{% url 'account_login' %}">Login</a> or <a href="{% url 'account_signup' %}">Register</a>
+              You need to <a href="{% url 'account_login' %}">Login</a> or <a
+                href="{% url 'account_signup' %}">Register</a>
               to submit a review
             </div><!-- ends: .atbd_notice -->
             {% else %}
@@ -624,7 +622,7 @@
             <hr/>
             {% if request.user == business.user %}
 
-            <a href="{% url 'openinghours:edit_open_hours' business.slug %}" class="btn btn-gradient btn-gradient-one">
+            <a href="{% url 'openinghours:update' business.slug %}" class="btn btn-gradient btn-gradient-one">
               Edit Business Hours
             </a>
             {% endif %}

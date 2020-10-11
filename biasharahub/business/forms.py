@@ -4,12 +4,12 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 # from django.contrib.admin import widgets
-from django.forms import inlineformset_factory, ModelForm
+from django.forms import inlineformset_factory, ModelForm, modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from haystack.forms import FacetedSearchForm
 from pagedown.widgets import PagedownWidget
 
-from business.models import Business, BusinessImage
+from business.models import Business, BusinessImage, CompanySocialProfile
 from categories.models import Category
 from locations.models import Location
 from reviews.models import RATING_CHOICES
@@ -24,7 +24,7 @@ class BusinessForm(ModelForm):
     class Meta:
         model = Business
         fields = (
-            'name', 'logo', 'description', 'website', 'twitter', 'location', 'category', 'email', 'address', 'services')
+            'name', 'logo', 'email', 'description', 'website', 'location', 'category', 'address', 'services')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,17 +33,16 @@ class BusinessForm(ModelForm):
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-8'
         self.helper.form_method = 'post'
-        self.helper.form_action = 'submit'
-        self.helper.add_input(Submit('submit', 'Submit', css_class='btn btn-gradient btn-gradient-two btn-lg'))
+        # self.helper.form_action = 'submit'
+        # self.helper.add_input(Submit('submit', 'Submit', css_class='btn btn-gradient btn-gradient-two btn-lg'))
         self.helper.layout = Layout(
             'name',
             'logo',
+            'email',
             'description',
             'website',
-            'twitter',
             'location',
             'category',
-            'email',
             'address',
             'services',
         )
@@ -57,18 +56,22 @@ class BusinessFilterForm(forms.Form):
     rating = forms.ChoiceField(label=_("Rating"), required=False, choices=RATING_CHOICES, )
 
 
-BusinessPhotoFormSet = inlineformset_factory(Business, BusinessImage, fields=('img', 'alt'),
-                                             widgets={'img': forms.FileInput(attrs={
-                                                 'class': 'form-control',
-                                                 'placeholder': 'Upload photo Image'
-                                             }),
-                                                 'alt': forms.TextInput(attrs={
-                                                     'class': 'form-control',
-                                                     'placeholder': 'Describe image'
-                                                 })},
-                                             labels={'img': '',
-                                                     'alt': ''},
-                                             form=BusinessForm, extra=6, max_num=24, can_delete=True)
+class BusinessPhotoForm(ModelForm):
+    class Meta:
+        model = BusinessImage
+        fields = ('img', 'alt')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            'img',
+            'alt',
+        )
+
+
+BusinessPhotoFormSet = modelformset_factory(BusinessImage, form=BusinessPhotoForm, extra=6, max_num=12, can_delete=True)
 
 
 class BusinessPhotoFormSetHelper(FormHelper):
@@ -83,6 +86,28 @@ class BusinessPhotoFormSetHelper(FormHelper):
             ),
         )
         self.add_input(Submit("submit", "Save", css_class='btn btn-gradient btn-gradient-one'))
+
+
+class SocialProfileForm(ModelForm):
+    class Meta:
+        model = CompanySocialProfile
+        fields = ('network', 'username', 'url')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('network', css_class='mt-10 form-group col-md-3 mb-0'),
+                Column('username', css_class='mt-10 form-group col-md-3 mb-0'),
+                Column('url', css_class='mt-10 form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+        )
+
+
+SocialProfileFormSet = inlineformset_factory(Business, CompanySocialProfile, form=SocialProfileForm,
+                                             can_delete=True, extra=3)
 
 
 class BusinessSearchForm(FacetedSearchForm):
