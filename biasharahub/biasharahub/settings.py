@@ -184,6 +184,8 @@ TEMPLATES = [
     },
 ]
 
+# TIME_INPUT_FORMATS = ['%I:%M %p',]
+
 WSGI_APPLICATION = 'biasharahub.wsgi.application'
 
 # Password validation

@@ -29,9 +29,12 @@ formset
             <form enctype="multipart/form-data" class="form-ad" action="." method="POST">
               <div class="form-group is-empty">
                 {% csrf_token %}
+              {% crispy form %}
+
                 {{ formset.management_form }}
                 {{ formset.non_form_errors }}
                 {% for form in formset %}
+                {{ form.id }}
                 <div class="form-group">
                   <div class="atbd_day_label form-label col-md-3 mb-1">
                     {{ form.weekday|as_crispy_field }}
@@ -60,6 +63,7 @@ formset
         </div>
       </div>
     </div>
+  </div>
 </section>
 {% endblock %}
 

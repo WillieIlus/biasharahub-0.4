@@ -37,10 +37,16 @@ class Slot(forms.Form):
 
 class OpeningHoursForm(ModelForm):
     weekday = forms.ChoiceField(required=False, choices=WEEKDAYS)
-    start = forms.TimeField(input_formats=['%H:%M'], label='Opening', required=False,
-                            widget=forms.TimeInput(attrs={'type': 'time'}))
-    end = forms.TimeField(input_formats=['%H:%M'], label='Closing', required=False,
-                            widget=forms.TimeInput(attrs={'type': 'time'}))
+    start = forms.TimeField(
+        # input_formats=['%I:%M %p',],
+                            label='Opening', required=False,
+                            # widget=forms.TimeInput(attrs={'type': 'time'})
+                            )
+    end = forms.TimeField(
+        # input_formats=['%I:%M %p',],
+        label='Closing', required=False,
+                            # widget=forms.TimeInput(attrs={'type': 'time'})
+                          )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

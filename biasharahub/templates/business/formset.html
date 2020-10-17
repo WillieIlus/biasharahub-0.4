@@ -23,6 +23,7 @@ formset
           <form enctype="multipart/form-data" class="form-ad" action="." method="POST">
             <div class="form-group is-empty"><br/>
               {% csrf_token %}
+              {% crispy form %}
               {{ formset.management_form }}
               {{ formset.non_form_errors }}
               <div class="form-row">

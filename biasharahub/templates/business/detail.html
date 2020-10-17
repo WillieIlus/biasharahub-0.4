@@ -263,7 +263,7 @@
             </a>
             {% endif %}
             {% if request.user == business.user %}
-            <a href="{% url 'business:photos' business.slug %}" class="btn btn-gradient btn-gradient-one">
+            <a href="{% url 'business:photo_update' business.slug %}" class="btn btn-gradient btn-gradient-one">
               Update Photos
             </a>&nbsp;
             {% endif %}

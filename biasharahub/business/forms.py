@@ -4,7 +4,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 # from django.contrib.admin import widgets
-from django.forms import inlineformset_factory, ModelForm, modelformset_factory
+from django.forms import ModelForm, modelformset_factory
+from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from haystack.forms import FacetedSearchForm
 from pagedown.widgets import PagedownWidget
@@ -13,6 +14,19 @@ from business.models import Business, BusinessImage, CompanySocialProfile
 from categories.models import Category
 from locations.models import Location
 from reviews.models import RATING_CHOICES
+
+
+class BusinessNameForm(ModelForm):
+    name = forms.CharField(disabled=True)
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # self.fields['name']
+    #     self.fields['name'].disabled
+
+    class Meta:
+        model = Business
+        fields = ('name',)
 
 
 class BusinessForm(ModelForm):
@@ -91,13 +105,14 @@ class BusinessPhotoFormSetHelper(FormHelper):
 class SocialProfileForm(ModelForm):
     class Meta:
         model = CompanySocialProfile
-        fields = ('network', 'username', 'url')
+        fields = ('business', 'network', 'username', 'url')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
+                Column('business', css_class='mt-10 form-group col-md-3 mb-0'),
                 Column('network', css_class='mt-10 form-group col-md-3 mb-0'),
                 Column('username', css_class='mt-10 form-group col-md-3 mb-0'),
                 Column('url', css_class='mt-10 form-group col-md-6 mb-0'),
@@ -106,8 +121,8 @@ class SocialProfileForm(ModelForm):
         )
 
 
-SocialProfileFormSet = inlineformset_factory(Business, CompanySocialProfile, form=SocialProfileForm,
-                                             can_delete=True, extra=3)
+SocialProfileFormSet = inlineformset_factory(Business, CompanySocialProfile, fields=['business', 'network', 'username', 'url'],
+                                             can_delete=True, exclude=None, extra=3, max_num=9)
 
 
 class BusinessSearchForm(FacetedSearchForm):

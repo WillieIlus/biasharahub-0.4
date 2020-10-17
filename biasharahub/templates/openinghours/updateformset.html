@@ -31,9 +31,9 @@ formset
                 {% csrf_token %}
               {% crispy form %}
                 <div class="form-group">
-                  {{ formset.management_form|crispy }}
-                  {{ formset.non_form_errors }}
-                  {% for formset in inlines %}
+                  {{ hours_formset.management_form|crispy }}
+                  {{ hours_formset.non_form_errors }}
+                  {% for formset in hours_formset %}
                   <div class="mt-10 form-group col-md-11 clearfix">
                     {{ formset|crispy }}
                   </div>&nbsp;

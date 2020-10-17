@@ -2,20 +2,19 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.utils.encoding import uri_to_iri
 from django.views.generic import CreateView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin, DetailView
-from extra_views import UpdateWithInlinesView, InlineFormSetFactory
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.query import SearchQuerySet
 
-from accounts.decorators import UserRequiredMixin
 from business.models import Business, BusinessImage
 from comments.forms import CommentForm
 from reviews.forms import ReviewForm
 from .forms import BusinessForm, BusinessSearchForm, \
-    SocialProfileFormSet, BusinessPhotoForm
+    SocialProfileFormSet, BusinessPhotoForm, BusinessNameForm
 
 
 def autocomplete(request):
@@ -82,41 +81,138 @@ class BusinessCreate(LoginRequiredMixin, CreateView):
             return super().form_invalid(form)
 
 
-@login_required
-def add_photos(request, slug):
-    business = Business.objects.get(slug=slug)
-    BusinessPhotoFormSet = inlineformset_factory(Business, BusinessImage, form=BusinessPhotoForm, extra=6, max_num=12,
-                                                 can_delete=True)
-    if request.method == "POST":
-        formset = BusinessPhotoFormSet(request.POST, request.FILES, instance=business,
-                                       queryset=BusinessImage.objects.all)
+class BusinessEdit(LoginRequiredMixin, UpdateView):
+    model = Business
+    form_class = BusinessForm
+    template_name = 'business/form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BusinessEdit, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['social_form'] = SocialProfileFormSet(self.request.POST, instance=self.object)
+            context['social_form'].full_clean()
+        else:
+            context['social_form'] = SocialProfileFormSet(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data(form=form)
+        formset = context['social_form']
+
         if formset.is_valid():
+            response = super().form_valid(form)
+            formset.instance = self.object
+            formset.save()
+            return response
+        else:
+            return super().form_invalid(form)
+
+
+class BusinessSocialProfile(LoginRequiredMixin, UpdateView):
+    model = Business
+    form_class = BusinessNameForm
+    template_name = 'business/form.html'
+    # success_url = self.model.get_absolute_url
+    success_message = "updated successfully"
+
+    def get_success_url(self):
+        return reverse('business:detail', kwargs={'slug': self.object.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super(BusinessSocialProfile, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['social_form'] = SocialProfileFormSet(self.request.POST, instance=self.object)
+            context['social_form'].full_clean()
+
+        else:
+            context['social_form'] = SocialProfileFormSet(instance=self.object)
+
+        return context
+
+    def form_valid(self, form):
+        # form.instance.user = self.request.user
+        # form.save()
+
+        context = self.get_context_data(form=form)
+        formset = context['social_form']
+
+        if formset.is_valid():
+            response = super().form_valid(form)
+            formset.instance = self.object
+            formset.save()
+            return response
+        else:
+            return super().form_invalid(form)
+
+
+@login_required
+def business_social_profile(request, slug):
+    business = Business.objects.get(slug=slug)
+
+    if request.method == "POST":
+        form = BusinessNameForm(request.POST, instance=business)
+        formset = SocialProfileFormSet(request.POST, request.FILES, instance=business)
+        if form and formset.is_valid():
             # response = super().form_valid(form)
-            formset.business = business
+            # formset.business = business
             formset.save()
             return HttpResponseRedirect(business.get_absolute_url())
     else:
         formset = BusinessPhotoFormSet(instance=business)
-    return render(request, 'business/formset.html', {'formset': formset})
+        form = BusinessNameForm( instance=business)
+
+    return render(request, 'business/form.html', {'form': form, 'social_form': formset})
+
+# @login_required
+# def add_photos(request, slug):
+#     business = Business.objects.get(slug=slug)
+
+#     if request.method == "POST":
+#         formset = BusinessPhotoFormSet(request.POST, request.FILES, instance=business,
+#                                        queryset=BusinessImage.objects.all)
+#         if formset.is_valid():
+#             # response = super().form_valid(form)
+#             formset.business = business
+#             formset.save()
+#             return HttpResponseRedirect(business.get_absolute_url())
+#     else:
+#         formset = BusinessPhotoFormSet(instance=business)
+#     return render(request, 'business/formset.html', {'formset': formset})
+
+BusinessPhotoFormSet = inlineformset_factory(Business, BusinessImage, form=BusinessPhotoForm, extra=6, max_num=12,
+                                             can_delete=True)
 
 
-class PhotoInline(InlineFormSetFactory):
-    model = BusinessImage
-    form_class = BusinessPhotoForm
-
-
-class PhotoUpdateView(UpdateWithInlinesView):
+class ManagePhoto(LoginRequiredMixin, UpdateView):
     model = Business
-    inlines = [PhotoInline]
-    fields = ['name']
-    template_name = 'business/updateformset.html'
+    form_class = BusinessNameForm
+    template_name = 'business/formset.html'
+    success_message = "created successfully"
 
+    def get_success_url(self):
+        return reverse('business:detail', kwargs={'slug': self.object.slug})
 
-class BusinessEdit(LoginRequiredMixin, UserRequiredMixin, UpdateView):
-    model = Business
-    slug_url_kwarg = 'slug'
-    form_class = BusinessForm
-    template_name = 'business/form.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = BusinessPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
+            context['formset'].full_clean()
+        else:
+            context['formset'] = BusinessPhotoFormSet(instance=self.object)
+
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data(form=form)
+        formset = context['formset']
+
+        if formset.is_valid():
+            response = super().form_valid(form)
+            formset.instance = self.object
+            formset.save()
+            return response
+        else:
+            return super().form_invalid(form)
 
 
 class BusinessDetail(SingleObjectMixin, ListView):

@@ -5,6 +5,7 @@ from openinghours.views import opening_hours, OpeningHoursUpdateView
 app_name = 'openinghours'
 
 urlpatterns = [
-    path('<slug:slug>/opening_hours/', opening_hours, name='update'),
-    path('<slug:slug>/update/', OpeningHoursUpdateView.as_view(), name='opening_hours_update'),
+    path('<slug:slug>/update2/', opening_hours, name='update2'),
+    path('<slug:slug>/opening_hours/', OpeningHoursUpdateView.as_view(), name='update'),
+    # path('<slug:slug>//', OpeningHoursUpdateView.as_view(), name='opening_hours_update'),
 ]
