@@ -34,6 +34,10 @@
             <div class="atbdb_content_module_contents">
               <p>{{ category.description }}</p>
             </div>
+                      <div class="atbd_listing_bottom_content">
+             <a class="btn btn-primary" href="{% url 'categories:add_business' slug=category.slug %}">
+              <span class="la la-plus"></span>Add Here</a>
+          </div>
           </div>
         </div><!-- ends: .atbd_author_module -->
       </div><!-- ends: .col-md-8 -->

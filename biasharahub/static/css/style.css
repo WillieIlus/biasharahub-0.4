@@ -1,9 +1,3 @@
-.center-cropped{
-  width: 100%;
-  height: 100%;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
 .m-top-0 {
   margin-top: 0px;
 }
@@ -2794,7 +2788,7 @@ p {
   padding: 6.66667rem 0 6.66667rem;
   position: relative;
   text-align: center;
-  background: none;
+  background: url("img/svg/sb-shape.svg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -6619,7 +6613,6 @@ p {
 
 .atbd_content_module .atbdb_content_module_contents .form-group {
   margin-bottom: 1.66667rem;
-  margin-right: -3rem;
 }
 
 .atbd_content_module .atbdb_content_module_contents .form-group:last-child {
@@ -6701,7 +6694,7 @@ p {
   height: 100%;
   left: 0;
   bottom: 0;
-  background: none;
+  background: url("img/svg/about-shape.svg");
   background-repeat: no-repeat;
   background-position: bottom;
 }
@@ -7527,28 +7520,3 @@ p {
 }
 
 /*# sourceMappingURL=maps/style.css.map */
-
-/*# sourceMappingURL=maps/style.css.map */
-  /* 404 PAGE */
-  .four_o_four_area .not_found h3 {
-    line-height: 30px;
-  }
-
-
-/***************************************
-       START 404 AREA
-****************************************/
-.not_found {
-  margin-top: 20px;
-}
-
-.not_found h3 {
-  font-size: 30px;
-  line-height: 80px;
-  color: #8026ff;
-  margin-bottom: 16px;
-}
-
-/***************************************
-       END 404 AREA
-****************************************/

@@ -4,6 +4,22 @@
 
 {% block title %}  Form  | {{ block.super }} {% endblock %}
 
+  {% block stylesheet %}
+<style>
+
+.wmd-panel{
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+
+.wmd-input pagedownwidget form-control{
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+
+</style>
+{% endblock %}
+
 {% block bg-image-holder %}
 <div class="bg_image_holder"><img alt="" src='{% static "img/breadcrumb1.jpg" %}'></div>
 {% endblock %}

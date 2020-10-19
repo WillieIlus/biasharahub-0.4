@@ -23,6 +23,11 @@ def get_login():
     return {'login': CustomLoginForm()}
 
 
+@register.inclusion_tag('includes/cat_to_add_biz.html')
+def get_cat_to_add_biz():
+    return {'categories': Category.objects.order_by('-publish')}
+
+
 @register.inclusion_tag('tags/signup.html')
 def get_signup():
     return {'signup': CustomSignupForm()}

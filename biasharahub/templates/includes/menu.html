@@ -83,7 +83,9 @@
                   <div class="author__access_area">
                     <ul class="d-flex list-unstyled align-items-center">
                       <li>
-                        <a class="btn btn-xs btn-gradient btn-gradient-two" href='{% url "business:new" %}'>
+                        <a class="btn btn-xs btn-gradient btn-gradient-two"
+                           data-target="#category_modal" data-toggle="modal"
+                           href='{% url "business:new" %}'>
                           <span class="la la-plus"></span> Add Biashara
                         </a>
                       </li>

@@ -1,6 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import inlineformset_factory
+from django.forms.models import inlineformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -52,8 +53,6 @@ class BusinessCreate(LoginRequiredMixin, CreateView):
     model = Business
     form_class = BusinessForm
     template_name = 'business/form.html'
-
-    # object = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -119,7 +118,7 @@ class BusinessSocialProfile(LoginRequiredMixin, UpdateView):
         return reverse('business:detail', kwargs={'slug': self.object.slug})
 
     def get_context_data(self, **kwargs):
-        context = super(BusinessSocialProfile, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if self.request.POST:
             context['social_form'] = SocialProfileFormSet(self.request.POST, instance=self.object)
             context['social_form'].full_clean()
@@ -145,74 +144,57 @@ class BusinessSocialProfile(LoginRequiredMixin, UpdateView):
             return super().form_invalid(form)
 
 
-@login_required
-def business_social_profile(request, slug):
-    business = Business.objects.get(slug=slug)
-
-    if request.method == "POST":
-        form = BusinessNameForm(request.POST, instance=business)
-        formset = SocialProfileFormSet(request.POST, request.FILES, instance=business)
-        if form and formset.is_valid():
-            # response = super().form_valid(form)
-            # formset.business = business
-            formset.save()
-            return HttpResponseRedirect(business.get_absolute_url())
-    else:
-        formset = BusinessPhotoFormSet(instance=business)
-        form = BusinessNameForm( instance=business)
-
-    return render(request, 'business/form.html', {'form': form, 'social_form': formset})
-
-# @login_required
-# def add_photos(request, slug):
-#     business = Business.objects.get(slug=slug)
-
-#     if request.method == "POST":
-#         formset = BusinessPhotoFormSet(request.POST, request.FILES, instance=business,
-#                                        queryset=BusinessImage.objects.all)
-#         if formset.is_valid():
-#             # response = super().form_valid(form)
-#             formset.business = business
-#             formset.save()
-#             return HttpResponseRedirect(business.get_absolute_url())
-#     else:
-#         formset = BusinessPhotoFormSet(instance=business)
-#     return render(request, 'business/formset.html', {'formset': formset})
-
 BusinessPhotoFormSet = inlineformset_factory(Business, BusinessImage, form=BusinessPhotoForm, extra=6, max_num=12,
                                              can_delete=True)
 
 
-class ManagePhoto(LoginRequiredMixin, UpdateView):
-    model = Business
-    form_class = BusinessNameForm
-    template_name = 'business/formset.html'
-    success_message = "created successfully"
+#
+# class ManagePhoto(LoginRequiredMixin, UpdateView):
+#     model = Business
+#     form_class = BusinessNameForm
+#     template_name = 'business/formset.html'
+#     success_message = "created successfully"
+#
+#     # def get_object(self):  # and you have to override a get_object method
+#     #     return get_object_or_404(Business, slug=self.request.GET.get('slug'))
+#
+#     def get_success_url(self):
+#         return reverse('business:detail', kwargs={'slug': self.object.slug})
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         if self.request.POST:
+#             context['photo_formset'] = BusinessPhotoFormSet(instance=self.object, data=self.request.POST, files=self.request.FILES)
+#             context['photo_formset'].full_clean()
+#         else:
+#             context['photo_formset'] = BusinessPhotoFormSet(instance=self.object)
+#         return context
+#
+#     def form_valid(self, form):
+#         context = self.get_context_data(form=form)
+#         formset = context['photo_formset']
+#         if formset.is_valid():
+#             response = super().form_valid(self.request.FILES)
+#             formset.instance = self.object
+#             formset.save()
+#             return response
+#         else:
+#             return super().form_invalid(form)
+#
 
-    def get_success_url(self):
-        return reverse('business:detail', kwargs={'slug': self.object.slug})
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.POST:
-            context['formset'] = BusinessPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
-            context['formset'].full_clean()
-        else:
-            context['formset'] = BusinessPhotoFormSet(instance=self.object)
-
-        return context
-
-    def form_valid(self, form):
-        context = self.get_context_data(form=form)
-        formset = context['formset']
-
-        if formset.is_valid():
-            response = super().form_valid(form)
-            formset.instance = self.object
-            formset.save()
-            return response
-        else:
-            return super().form_invalid(form)
+@login_required
+def add_photos(request, slug):
+    """company = get_object_or_404(Business, slug=slug)"""
+    company = Business.objects.get(slug=slug)
+    form = BusinessPhotoFormSet(request.POST or None, request.FILES or None, instance=company)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Successfully Created")
+        return HttpResponseRedirect(company.get_absolute_url())
+    context = {
+        "form": form,
+    }
+    return render(request, "business/photo_formset.html", context)
 
 
 class BusinessDetail(SingleObjectMixin, ListView):
@@ -238,7 +220,6 @@ class BusinessDetail(SingleObjectMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = ReviewForm()
         context['comment_form'] = CommentForm()
-        # context['related_business'] = self.object.services.similar_objects()[:4]
 
         return context
 

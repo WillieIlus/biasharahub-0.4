@@ -42,6 +42,7 @@
         <div class="col-lg-4 col-sm-6">
           <div class="widget widget_text">
             <h2 class="widget-title">Subscribe to Newsletter</h2>
+            {% comment %}
             <div class="textwidget">
               <p>At these time this is not working.</p>
               <ul class="list-unstyled store-btns">
@@ -49,6 +50,8 @@
                                   </span> Subscribe </a></li>
               </ul>
             </div>
+            {% endcomment %}
+
           </div><!-- ends: .widget -->
         </div><!-- ends: .col-lg-3 -->
       </div>
@@ -70,5 +73,7 @@
     </div>
   </div><!-- ends: .footer-bottom -->
 </footer><!-- ends: .footer -->
+
+          {% get_cat_to_add_biz %}
           {% get_login %}
           {% get_signup %}

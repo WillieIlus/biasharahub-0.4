@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 
 {% block title %}  Biashara List  | {{ block.super }} {% endblock %}
@@ -112,7 +113,7 @@
                             </li>
                             <li>
                               <p><span class="la la-calendar-check-o"></span>
-                                Posted {{ business.publish|date }}, ( {{ business.publish|timesince }} ago )</p>
+                                Posted {{ business.publish|date }} ( {{ business.publish|timesince }} ago )</p>
                             </li>
                           </ul>
                         </div><!-- End atbd listing meta -->

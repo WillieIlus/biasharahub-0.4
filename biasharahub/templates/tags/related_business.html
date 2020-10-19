@@ -1,5 +1,20 @@
 {% load staticfiles %}
 
+{% block stylesheet %}
+<style>
+      .atbd_left_img {
+        width: 70px;
+        height: 70px;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+</style>
+{% endblock %}
+
 <div class="widget atbd_widget widget-card">
           <div class="atbd_widget_title">
             <h4><span class="la la-list-alt"></span> Similar Biashara</h4>
@@ -11,7 +26,7 @@
               <li>
                 <div class="atbd_left_img">
                   {% if obj.featured_image %}
-                  <a href="{{ obj.get_absolute_url }}"><img alt="listing image" src="{{ obj.featured_image.url }}"></a>
+                  <a href="{{ obj.get_absolute_url }}"><img src="{{ obj.featured_image }}"></a>
                   {% endif %}
                 </div>
                 <div class="atbd_right_content">

@@ -71,21 +71,30 @@ class BusinessFilterForm(forms.Form):
 
 
 class BusinessPhotoForm(ModelForm):
+    img = forms.ImageField(label='Image', )
+    alt = forms.CharField(label='Describe the Image', )
     class Meta:
         model = BusinessImage
-        fields = ('img', 'alt')
+        fields = ('business', 'img', 'alt')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
-            'img',
-            'alt',
+            'business',
+            Row(
+                Column('img', css_class='mt-10 form-group col-md-6 mb-0'),
+                Column('alt', css_class='mt-10 form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
         )
 
 
-BusinessPhotoFormSet = modelformset_factory(BusinessImage, form=BusinessPhotoForm, extra=6, max_num=12, can_delete=True)
+
 
 
 class BusinessPhotoFormSetHelper(FormHelper):

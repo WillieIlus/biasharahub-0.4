@@ -4,18 +4,25 @@
 
 {% block title %}  home | {{ block.super }} {% endblock %}
 {% block stylesheet %}
-    <style>
+
+<style>
       .atbd_listing_image {
         width: 100%;
         height: 220px;
+      }
+      .atbd_author {
+        width: 40px;
+        height: 40px;
       }
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-    </style>
+
+</style>
 {% endblock %}
+
 {% block headcrumb-wrapper %}
 {% endblock %}
 
@@ -42,7 +49,8 @@
               {% for category in category %}
               <li>
                 <a href="{{ category.get_absolute_url }}">
-                  <span class="color-primary"><i class="{{ category.icon }}"></i></span>
+                  <span class="{% cycle 'color-success' 'color-primary' 'color-warning' 'color-danger' as rowcolorsv%}" >
+                    <i class="{{ category.icon }}"></i></span>
                   {{ category.name }}
                 </a>
               </li>
@@ -80,7 +88,7 @@
                   <div class="atbd_author atbd_author--thumb">
                     <a href="{{ business.get_absolute_url }}">
                       <img alt="Logo" class="center-cropped" src='{% if business.logo %}
-                          {{ business.logo3.url }} {% else %} {% static "img/author-thumb2.jpg" %} {% endif %}'>
+                          {{ business.logo.url }} {% else %} {% static "img/author-thumb2.jpg" %} {% endif %}'>
                       <span class="custom-tooltip">{{ business.name }}</span>
                     </a>
                   </div>
@@ -171,6 +179,8 @@
   </div>
 </section><!-- ends: .listing-cards -->
 {% endif %}
+
+
 {% if review %}
 <section class="blog-area blog-grid section-padding-strict section-bg">
   <div class="container">
@@ -189,7 +199,7 @@
             {% if review.featured_image %}
             <figure class="box">
               <a href="{{ review.get_absolute_url }}"><img alt="" src='
-                {{ review.featured_image }}' ></a>
+                {{ review.featured_image }}'></a>
             </figure>
             {% endif %}
             <div class="card-body">
@@ -267,6 +277,40 @@
     </div>
   </div>
 </section><!-- ends: .subscribe-wrapper -->
+
+
+<div class="well">
+  <h1><a href="http://jquery2dotnet.com">Vote up and down script using bootstrap</a></h1>
+
+  <div class="row">
+    <div class="col-sm-2">
+      <div class="input-group"><span class="input-group-btn"><button type="button" id="increaseButton"
+                                                                     class="btn btn-success">+</button></span>
+
+        <input type="text" class="form-control" id="vote" placeholder="Vote"/> <span class="input-group-btn"><button
+            type="button" id="decreaseButton" class="btn btn-danger">-</button></span>
+
+      </div>
+    </div>
+  </div>
+</div>
 {% endcomment %}
 
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$("#vote").val('0');
+// Create a click handler for your increment button
+$("#increaseButton").click(function () {
+    var newValue = 1 + parseInt($("#vote").val());
+    $("#vote").val(newValue);
+});
+// .. and your decrement button
+$("#decreaseButton").click(function () {
+    var newValue = parseInt($("#vote").val()) - 1;
+    $("#vote").val(newValue);
+});
+</script>
 {% endblock %}

@@ -46,7 +46,9 @@
               </li>
             </ul>
             <div class="nav_button">
-              <a class="btn btn-primary" href="{% url 'business:new' %}"><span class="la la-plus"></span> Add
+              <a class="btn btn-primary"
+                 data-target="#category_modal" data-toggle="modal"
+                 href="{% url 'business:new' %}"><span class="la la-plus"></span> Add
                 Biashara</a>
               <a class="btn btn-secondary" href="{% url 'account_logout' %}">Log Out</a>
             </div>
@@ -60,7 +62,7 @@
       <div class="container">
         <div class="row">
           {% if user.added_by.all %}
-          {% for business in user.owner.all %}
+          {% for business in user.added_by.all %}
           <div class="col-lg-4 col-sm-6">
             <div class="atbd_single_listing ">
               <article class="atbd_single_listing_wrapper">
@@ -162,7 +164,9 @@
           {% endfor %}
           {% else %}
           <div class="col-lg-12">
-            <p>You haven't added any biashara. <a class="btn btn-primary" href="{% url 'business:new' %}">
+            <p>You haven't added any biashara. <a class="btn btn-primary"
+                                                  data-target="#category_modal" data-toggle="modal"
+                                                  href="{% url 'business:new' %}">
               <span class="la la-plus"></span>Add Here</a></p>
           </div>
           {% endif %}

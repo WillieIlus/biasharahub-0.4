@@ -1,9 +1,8 @@
 from datetime import time
 
 from django import forms
-from django.forms import ModelForm, TimeInput
-
-from openinghours.models import OpeningHours, WEEKDAYS
+from django.forms import ModelForm
+from openinghours.models import OpeningHours
 
 
 def str_to_time(s):
@@ -35,31 +34,42 @@ class Slot(forms.Form):
     shuts = forms.ChoiceField(choices=TIME_CHOICES)
 
 
-class OpeningHoursForm(ModelForm):
-    weekday = forms.ChoiceField(required=False, choices=WEEKDAYS)
-    start = forms.TimeField(
-        # input_formats=['%I:%M %p',],
-                            label='Opening', required=False,
-                            # widget=forms.TimeInput(attrs={'type': 'time'})
-                            )
-    end = forms.TimeField(
-        # input_formats=['%I:%M %p',],
-        label='Closing', required=False,
-                            # widget=forms.TimeInput(attrs={'type': 'time'})
-                          )
 
-    def __init__(self, *args, **kwargs):
+
+class OpeningHoursForm(ModelForm):
+    # weekday = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'True'}))
+    start = forms.ChoiceField(choices=TIME_CHOICES, label='Opening', required=False)
+    end = forms.ChoiceField(choices=TIME_CHOICES, label='Closing', required=False)
+
+    def __init__(self, *args, disabled_weekday=True, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['weekday']
         # self.fields['weekday'].disabled = disabled_weekday
 
     class Meta:
         model = OpeningHours
-        fields = ('weekday', 'start', 'end', 'closed')
-        widget = {
-            'start': TimeInput(attrs={'type': 'time'}),
-            'start': TimeInput(attrs={'type': 'time'})
-        }
+        # fields = ('start', 'end', 'closed')
+        fields = ('company', 'weekday', 'start', 'end', 'closed')
+
+#
+# OpeningHoursFormset = inlineformset_factory(Business, OpeningHours, OpeningHoursForm, extra=0, max_num=7, min_num=7,
+#                                             can_delete=False, can_order=False)
+
+# class OpeningHoursForm(ModelForm):
+#     weekday = forms.ChoiceField(required=False, choices=WEEKDAYS)
+#     start = forms.ChoiceField(label='Opening', choices=TIME_CHOICES, required=False)
+#     end = forms.ChoiceField(label='Closing', choices=TIME_CHOICES, required=False)
+#
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['weekday']
+#
+#     class Meta:
+#         model = OpeningHours
+#         fields = ('weekday', 'start', 'end', 'closed')
+#         widget = {
+#             'start': TimeInput(attrs={'type': 'time'}),
+#             'start': TimeInput(attrs={'type': 'time'})
+#         }
 
 # formset = OpeningHoursFormset(initial=[{'weekday': x} for x in OpeningHours.weekday.choices])
 

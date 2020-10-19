@@ -1,9 +1,14 @@
 from builtins import super
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Column, Layout, Row, Submit, Div
+from crispy_forms.layout import Column, Layout, Row, Submit
+from crispy_forms.layout import Div
 from django import forms
+# from django.contrib.admin import widgets
+from django.forms import ModelForm
+from pagedown.widgets import PagedownWidget
 
+from business.models import Business
 from .models import Category
 
 
@@ -36,4 +41,34 @@ class CategoryForm(forms.ModelForm):
             Div('description', css_class='form-group'),
             Submit('submit', 'Submit'),
 
+        )
+
+
+class CategoryBusinessForm(ModelForm):
+    logo = forms.ImageField(label='logo', required=False,
+                            widget=forms.ClearableFileInput(attrs={'placeholder': 'Logo',
+                                                                   'class': 'btn btn-outline-secondary'}))
+    description = forms.CharField(widget=PagedownWidget())
+
+    class Meta:
+        model = Business
+        fields = (
+            'name', 'logo', 'email', 'description', 'website', 'location', 'address', 'services')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            'name',
+            'logo',
+            'email',
+            'description',
+            'website',
+            'location',
+            'address',
+            'services',
         )
